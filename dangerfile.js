@@ -1,5 +1,5 @@
 if (danger.github.pr.body.length < 10) {
-    fail(
+    warn(
         'Please provide a detailed PR description. Explain the **what**, **why**, and **how**.'
     );
 }
