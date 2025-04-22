@@ -21,7 +21,8 @@
             "@types/node",
             "@nestjs/common",
             "fastify",
-            "@fastify/cookie"
+            "@fastify/cookie",
+            "jest",
           ],
     },
     "include": ["src/**/*.ts", "test/**/*.ts", "dangerfile.js"]
