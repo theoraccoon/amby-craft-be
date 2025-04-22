@@ -25,7 +25,7 @@ model User {
   email          String   @unique
   role           Role     @relation(fields: [roleId], references: [id])
   roleId         String   @map("role_id")
-  googleId       String?  @map("google_id")
+  googleId       String?  @unique @map("google_id")
   refreshToken   String?  @map("refresh_token")
   profilePicture String?  @map("profile_picture")
   password       String?
