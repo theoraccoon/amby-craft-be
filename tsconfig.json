@@ -16,7 +16,14 @@
         "forceConsistentCasingInFileNames": true,
         "noImplicitAny": false,
         "strictBindCallApply": false,
-        "noFallthroughCasesInSwitch": false
+        "noFallthroughCasesInSwitch": false,
+        "types": [
+            "@types/node",
+            "@nestjs/common",
+            "fastify",
+            "@fastify/cookie",
+            "jest",
+          ],
     },
     "include": ["src/**/*.ts", "test/**/*.ts", "dangerfile.js"]
 }
