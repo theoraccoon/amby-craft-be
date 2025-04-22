@@ -5,7 +5,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import * as cookieParser from 'cookie-parser';
+import cookie from '@fastify/cookie';
 import { setupSwagger } from './config/swagger.config';
 
 async function bootstrap() {
@@ -14,7 +14,6 @@ async function bootstrap() {
         new FastifyAdapter()
     );
     app.useGlobalPipes(new ValidationPipe());
-    app.use(cookieParser());
 
     app.setGlobalPrefix('api/v1');
     setupSwagger(app);
