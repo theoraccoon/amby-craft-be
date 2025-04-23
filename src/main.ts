@@ -1,31 +1,35 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { NestFactory } from '@nestjs/core';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
+import * as session from 'express-session';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
-import cookie from '@fastify/cookie';
+import * as cookieParser from 'cookie-parser';
+import * as passport from 'passport';
 import { setupSwagger } from './config/swagger.config';
-import { FastifyInstance } from 'fastify';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter()
+  const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
+  const sessionSecret = process.env.SESSION_SECRET;
+  
+  if (!sessionSecret) {
+    throw new Error('SESSION_SECRET is not defined in the environment variables');
+  }
+  
+  app.use(
+    session({
+      secret: sessionSecret,
+      resave: false,
+      saveUninitialized: false,
+    }),
   );
-  
-  app.useGlobalPipes(new ValidationPipe());
-  
-  const fastifyApp = app.getHttpAdapter().getInstance() as FastifyInstance;
-  
-  await fastifyApp.register(cookie, {
-    secret: process.env.COOKIE_SECRET,
-    parseOptions: {},
-  });
-  
+
   app.setGlobalPrefix('api/v1');
   setupSwagger(app);
+    
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
   console.log(`Application is running on: ${await app.getUrl()}`);
