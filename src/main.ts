@@ -10,6 +10,7 @@ import { setupSwagger } from './config/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  
   app.use(cookieParser());
   const sessionSecret = process.env.SESSION_SECRET;
   
@@ -29,6 +30,7 @@ async function bootstrap() {
   setupSwagger(app);
     
   app.use(passport.initialize());
+  
   app.use(passport.session());
 
   await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
@@ -36,6 +38,11 @@ async function bootstrap() {
 }
 
 bootstrap().catch((err: unknown) => {
-  console.error('Error starting the application:', err);
+  if (err instanceof Error) {
+    console.error('Error starting the application:', err.message, err.stack);
+  } else {
+    console.error('Error starting the application:', String(err));
+  }
   process.exit(1);
 });
+
