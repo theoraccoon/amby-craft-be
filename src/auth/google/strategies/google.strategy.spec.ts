@@ -13,7 +13,7 @@ describe('GoogleStrategy', () => {
             id: 'google-id-123',
             name: { givenName: 'John', familyName: 'Doe' },
             emails: [{ value: 'john.doe@example.com' }],
-            photos: [{ value: 'http://photo.url/john.jpg' }],
+            photos: [{ value: 'http://photo.url/jfohn.jpg' }],
         } as unknown as Profile;
 
         const done = jest.fn();
@@ -25,7 +25,7 @@ describe('GoogleStrategy', () => {
             email: 'john.doe@example.com',
             firstName: 'John',
             lastName: 'Doe',
-            profilePicture: 'http://photo.url/john.jpg',
+            profilePicture: 'http://photo.url/jfohn.jpg',
             roleId: 'user-role-id',
         });
     });
