@@ -4,13 +4,13 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import * as passport from 'passport';
 import { setupSwagger } from './config/swagger.config';
-
 import * as dotenv from 'dotenv';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 dotenv.config();
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
-
+    app.useGlobalInterceptors(new TransformInterceptor());
     app.use(cookieParser());
     const sessionSecret = process.env.SESSION_SECRET;
 
@@ -29,6 +29,7 @@ async function bootstrap() {
     );
 
     app.setGlobalPrefix('api/v1');
+
     setupSwagger(app);
 
     app.use(passport.initialize());
