@@ -20,7 +20,8 @@
         "paths": {
             "@prisma/*": ["./src/prisma/*"],
             "@strategies/*": ["./src/auth/strategies/*"],
-            "@google/*": ["./src/auth/google/*"]
+            "@google/*": ["./src/auth/google/*"],
+            "@config/*": ["./src/config/*"],
         }
     },
     "include": ["src/**/*.ts", "test/**/*.ts", "dangerfile.js"]

@@ -3,9 +3,10 @@ import * as session from 'express-session';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import * as passport from 'passport';
-import { setupSwagger } from './config/swagger.config';
+import { setupSwagger } from '@config/swagger.config';
 
 import * as dotenv from 'dotenv';
+import { API_CONSTANTS, ERRORS, RUNNINGS, SESSION } from '@config/constants';
 dotenv.config();
 
 async function bootstrap() {
@@ -15,9 +16,7 @@ async function bootstrap() {
     const sessionSecret = process.env.SESSION_SECRET;
 
     if (!sessionSecret) {
-        throw new Error(
-            'SESSION_SECRET is not defined in the environment variables'
-        );
+        throw new Error(SESSION.SESSION_SECRET_UNDEFINED);
     }
 
     app.use(
@@ -28,26 +27,27 @@ async function bootstrap() {
         })
     );
 
-    app.setGlobalPrefix('api/v1');
+    app.setGlobalPrefix(API_CONSTANTS.API_GLOBAL_PREFIX);
     setupSwagger(app);
 
     app.use(passport.initialize());
 
     app.use(passport.session());
 
-    await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
-    console.log(`Application is running on: ${await app.getUrl()}`);
+    await app.listen(process.env.PORT ?? 3000, RUNNINGS.BASE_HOST);
+    console.log(RUNNINGS.LISTENING_ON_PORT, process.env.PORT ?? 3000);
+    console.log(RUNNINGS.RUNNING_ON, ` ${await app.getUrl()}`);
 }
 
 bootstrap().catch((err: unknown) => {
     if (err instanceof Error) {
         console.error(
-            'Error starting the application:',
+            ERRORS.ERROR_STARTING_APPLICATION_MESSAGE,
             err.message,
             err.stack
         );
     } else {
-        console.error('Error starting the application:', String(err));
+        console.error(ERRORS.ERROR_STARTING_APPLICATION_MESSAGE, String(err));
     }
     process.exit(1);
 });

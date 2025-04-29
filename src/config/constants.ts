@@ -84,9 +84,28 @@ export const API_CONSTANTS = {
     GOOGLE_AUTH: 'auth/google',
     GOOGLE_AUTH_CALLBACK: 'auth/google/callback',
     GOOGLE: 'google',
+    API_GLOBAL_PREFIX: 'api/v1',
 };
 
 export const TEXTS = {
     EMAIL: 'email',
     PROFILE: 'profile',
+};
+
+export const SESSION = {
+    SESSION_SECRET_UNDEFINED:
+        'SESSION_SECRET is not defined in the environment variables',
+};
+
+export const ERRORS = {
+    ERROR_STARTING_APPLICATION: 'Error starting the application:',
+    ERROR_STARTING_APPLICATION_MESSAGE: 'Error starting the application:',
+};
+
+export const RUNNINGS = {
+    RUNNING_ON: 'Application is running on:',
+    LISTENING_ON: 'Listening on port:',
+    LISTENING_ON_HOST: 'Listening on host:',
+    LISTENING_ON_PORT: 'Listening on port:',
+    BASE_HOST: '0.0.0.0',
 };
