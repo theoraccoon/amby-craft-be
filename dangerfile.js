@@ -1,3 +1,7 @@
+const filteredModifiedFiles = danger.git.modified_files.filter(
+    (file) => !['project.json', 'project-lock.json'].includes(file)
+);
+
 if (danger.github.pr.body.length < 10) {
     warn(
         'Please provide a detailed PR description. Explain the **what**, **why**, and **how**.'
@@ -5,9 +9,9 @@ if (danger.github.pr.body.length < 10) {
 }
 
 const MAX_ALLOWED_FILES = 15;
-if (danger.git.modified_files.length > MAX_ALLOWED_FILES) {
+if (filteredModifiedFiles.length > MAX_ALLOWED_FILES) {
     warn(
-        `This PR changes ${danger.git.modified_files.length} files (max recommended: ${MAX_ALLOWED_FILES}). Consider splitting into smaller PRs.`
+        `This PR changes ${filteredModifiedFiles.length} files (max recommended: ${MAX_ALLOWED_FILES}). Consider splitting into smaller PRs.`
     );
 }
 
@@ -16,8 +20,8 @@ const conventionalCommitRegex =
 
 if (!danger.github.pr.title.match(conventionalCommitRegex)) {
     fail(`PR title must follow **Conventional Commits**:  
-  Example: \`feat(api): add login endpoint\`  
-  Allowed types: feat, fix, chore, docs, style, refactor, test, ci, build, perf, revert`);
+    Example: \`feat(api): add login endpoint\`  
+    Allowed types: feat, fix, chore, docs, style, refactor, test, ci, build, perf, revert`);
 }
 
 const invalidCommits = danger.git.commits
@@ -30,13 +34,13 @@ if (invalidCommits.length > 0) {
     );
 }
 
-const hasSrcChanges = danger.git.modified_files.some((file) =>
+const hasSrcChanges = filteredModifiedFiles.some((file) =>
     file.startsWith('src/')
 );
-const hasTestChanges = danger.git.modified_files.some(
+const hasTestChanges = filteredModifiedFiles.some(
     (file) => file.startsWith('test/') || file.startsWith('spec/')
 );
-const hasDocChanges = danger.git.modified_files.some(
+const hasDocChanges = filteredModifiedFiles.some(
     (file) => file.startsWith('docs/') || file.includes('README')
 );
 
