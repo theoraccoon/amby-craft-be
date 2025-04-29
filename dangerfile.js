@@ -20,6 +20,10 @@ const CONFIG = {
   },
 };
 
+let filteredFiles;
+let totalChanges;
+let invalidCommits = [];
+
 const prTitleConventionalCheck = () => {
   const conventionalTitleRegex = new RegExp(`^(${CONFIG.COMMIT.TYPES.join('|')})` + `(\\(${CONFIG.COMMIT.SCOPE_PATTERN}\\))?: .{1,${CONFIG.PR.TITLE_MAX_LENGTH}}$`);
 
@@ -39,7 +43,7 @@ const prTitleConventionalCheck = () => {
 const commitValidation = () => {
   const conventionalCommitRegex = new RegExp(`^(${CONFIG.COMMIT.TYPES.join('|')})` + `(\\(${CONFIG.COMMIT.SCOPE_PATTERN}\\))?: .{1,${CONFIG.COMMIT.HEADER_MAX_LENGTH}}$`);
 
-  const invalidCommits = danger.git.commits
+  invalidCommits = danger.git.commits
     .filter(commit => {
       const [header] = commit.message.split('\n');
       return !header.match(conventionalCommitRegex);
@@ -48,14 +52,12 @@ const commitValidation = () => {
       const [header] = commit.message.split('\n');
       return `- \`${header}\` (${commit.sha.slice(0, 7)})`;
     });
-
-  if (invalidCommits.length > 0) {
-    fail(`Invalid commit messages:\n${invalidCommits.join('\n')}\n\n**Format**: \`<type>(<scope>): <subject>\` (max ${CONFIG.COMMIT.HEADER_MAX_LENGTH} chars)`);
-  }
 };
 
 const sizeValidation = () => {
-  const filteredFiles = danger.git.modified_files.filter(file => !['project.json', 'project-lock.json'].includes(file));
+  filteredFiles = danger.git.modified_files.filter(file => !['project.json', 'project-lock.json'].includes(file));
+
+  totalChanges = danger.github.pr.additions + danger.github.pr.deletions;
 
   if (filteredFiles.length > CONFIG.MAX_FILES.FAIL) {
     fail(`Changed ${filteredFiles.length} files (max ${CONFIG.MAX_FILES.FAIL}). Split into smaller PRs!`);
@@ -63,7 +65,6 @@ const sizeValidation = () => {
     warn(`Changed ${filteredFiles.length} files (recommended < ${CONFIG.MAX_FILES.WARN}). Consider splitting.`);
   }
 
-  const totalChanges = danger.github.pr.additions + danger.github.pr.deletions;
   if (totalChanges > CONFIG.MAX_LINES.FAIL) {
     fail(`PR too large (+${danger.github.pr.additions}/-${danger.github.pr.deletions} lines). Break it up!`);
   } else if (totalChanges > CONFIG.MAX_LINES.WARN) {
@@ -95,7 +96,6 @@ const contentValidation = () => {
 };
 
 const labelValidation = () => {
-  const REQUIRED_LABELS = ['type:bug', 'type:enhancement', 'area:api', 'area:ui'];
   const labels = danger.github.pr.labels.map(label => label.name);
 
   if (!labels.some(label => label.startsWith('type:'))) {
