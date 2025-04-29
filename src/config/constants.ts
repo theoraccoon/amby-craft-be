@@ -68,4 +68,25 @@ export const CONTENT_TYPES = {
     DIVIDER_BLOCK: 'divider',
     NUMBERED_DIVIDER_BLOCK: 'numbered_divider',
     SPACER_BLOCK: 'spacer',
+
+    //tokens
+    ACCESS_TOKEN_EXPIRY: '1h',
+    REFRESH_TOKEN_EXPIRY: '7d',
+
+    // user
+    USER_NOT_FOUND: 'User not found',
+    USER_ALREADY_EXISTS: 'User already exists',
+    USER_INFO: 'User Info',
+};
+
+export const API_CONSTANTS = {
+    GOOGLE_API_TAG: 'Google Auth',
+    GOOGLE_AUTH: 'auth/google',
+    GOOGLE_AUTH_CALLBACK: 'auth/google/callback',
+    GOOGLE: 'google',
+};
+
+export const TEXTS = {
+    EMAIL: 'email',
+    PROFILE: 'profile',
 };
