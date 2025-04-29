@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { GoogleAuthService } from './google-auth.service';
-import { GoogleAuthController } from './google-auth.controller';
-import { GoogleStrategy } from './strategies/google.strategy';
+import { GoogleAuthService } from '@google/services/google-auth.service';
+import { GoogleAuthController } from '@google/google-auth.controller';
+import { GoogleStrategy } from '@strategies/google.strategy';
 import { PassportModule } from '@nestjs/passport';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '@prisma/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({

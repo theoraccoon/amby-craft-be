@@ -5,7 +5,7 @@ import {
     StrategyOptions,
     VerifyCallback,
 } from 'passport-google-oauth20';
-import { GoogleAuthService } from '../google-auth.service';
+import { GoogleAuthService } from '@google/services/google-auth.service';
 import { Profile as GoogleProfile } from 'passport-google-oauth20';
 
 interface GoogleUserInfo {
