@@ -112,3 +112,10 @@ export const RUNNINGS = {
     LISTENING_ON_PORT: 'Listening on port:',
     BASE_HOST: '0.0.0.0',
 };
+
+export const SWAGGER = {
+    SWAGGER_API: 'Ambylon Craft API',
+    SWAGGER_API_DESCRIPTION: 'The Ambylon Craft API description',
+    SWAGGER_API_VERSION: '1.0',
+    SWAGGER_API_PATH: 'docs',
+};
