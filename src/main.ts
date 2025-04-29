@@ -9,45 +9,39 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
-    app.use(cookieParser());
-    const sessionSecret = process.env.SESSION_SECRET;
+  app.use(cookieParser());
+  const sessionSecret = process.env.SESSION_SECRET;
 
-    if (!sessionSecret) {
-        throw new Error(
-            'SESSION_SECRET is not defined in the environment variables'
-        );
-    }
+  if (!sessionSecret) {
+    throw new Error('SESSION_SECRET is not defined in the environment variables');
+  }
 
-    app.use(
-        session({
-            secret: sessionSecret,
-            resave: false,
-            saveUninitialized: false,
-        })
-    );
+  app.use(
+    session({
+      secret: sessionSecret,
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
 
-    app.setGlobalPrefix('api/v1');
-    setupSwagger(app);
+  app.setGlobalPrefix('api/v1');
+  setupSwagger(app);
 
-    app.use(passport.initialize());
+  app.use(passport.initialize());
 
-    app.use(passport.session());
+  app.use(passport.session());
 
-    await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
-    console.log(`Application is running on: ${await app.getUrl()}`);
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
 
 bootstrap().catch((err: unknown) => {
-    if (err instanceof Error) {
-        console.error(
-            'Error starting the application:',
-            err.message,
-            err.stack
-        );
-    } else {
-        console.error('Error starting the application:', String(err));
-    }
-    process.exit(1);
+  if (err instanceof Error) {
+    console.error('Error starting the application:', err.message, err.stack);
+  } else {
+    console.error('Error starting the application:', String(err));
+  }
+  process.exit(1);
 });
