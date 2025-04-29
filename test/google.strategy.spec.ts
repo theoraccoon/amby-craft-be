@@ -1,4 +1,4 @@
-import { GoogleStrategy } from '../src/auth/google/strategies/google.strategy';
+import { GoogleStrategy } from '../src/auth/strategies/google.strategy';
 
 describe('GoogleStrategy', () => {
     let strategy: GoogleStrategy;
