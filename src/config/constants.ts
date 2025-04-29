@@ -68,4 +68,53 @@ export const CONTENT_TYPES = {
   DIVIDER_BLOCK: 'divider',
   NUMBERED_DIVIDER_BLOCK: 'numbered_divider',
   SPACER_BLOCK: 'spacer',
+
+  //tokens
+  ACCESS_TOKEN_EXPIRY: '1h',
+  REFRESH_TOKEN_EXPIRY: '7d',
+
+  // user
+  USER_NOT_FOUND: 'User not found',
+  USER_ALREADY_EXISTS: 'User already exists',
+  USER_INFO: 'User Info',
+};
+
+export const API_CONSTANTS = {
+  GOOGLE_API_TAG: 'Google Auth',
+  GOOGLE_AUTH: 'auth/google',
+  GOOGLE_AUTH_CALLBACK: 'auth/google/callback',
+  GOOGLE: 'google',
+  API_GLOBAL_PREFIX: 'api/v1',
+  HEALTH_CHECK: 'Health Check',
+  PING: 'ping',
+  PONG: 'pong!',
+};
+
+export const TEXTS = {
+  EMAIL: 'email',
+  PROFILE: 'profile',
+};
+
+export const SESSION = {
+  SESSION_SECRET_UNDEFINED: 'SESSION_SECRET is not defined in the environment variables',
+};
+
+export const ERRORS = {
+  ERROR_STARTING_APPLICATION: 'Error starting the application:',
+  ERROR_STARTING_APPLICATION_MESSAGE: 'Error starting the application:',
+};
+
+export const RUNNINGS = {
+  RUNNING_ON: 'Application is running on:',
+  LISTENING_ON: 'Listening on port:',
+  LISTENING_ON_HOST: 'Listening on host:',
+  LISTENING_ON_PORT: 'Listening on port:',
+  BASE_HOST: '0.0.0.0',
+};
+
+export const SWAGGER = {
+  SWAGGER_API: 'Ambylon Craft API',
+  SWAGGER_API_DESCRIPTION: 'The Ambylon Craft API description',
+  SWAGGER_API_VERSION: '1.0',
+  SWAGGER_API_PATH: 'docs',
 };
