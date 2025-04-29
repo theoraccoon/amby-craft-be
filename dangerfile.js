@@ -114,9 +114,9 @@ const runChecks = () => {
   contentValidation();
   labelValidation();
 
-  if (!danger.github.pr.body.includes('[x]')) {
-    message('ℹ️ Consider adding a checklist using ```[tasklist]\n- [ ] Items\n```');
-  }
+  // if (!danger.github.pr.body.includes('[x]')) {
+  //   message('ℹ️ Consider adding a checklist using ```[tasklist]\n- [ ] Items\n```');
+  // }
 
   if (filteredFiles.length <= CONFIG.MAX_FILES.WARN && totalChanges <= CONFIG.MAX_LINES.WARN && invalidCommits.length === 0) {
     message('✅ PR meets all quality standards!');
