@@ -85,6 +85,9 @@ export const API_CONSTANTS = {
     GOOGLE_AUTH_CALLBACK: 'auth/google/callback',
     GOOGLE: 'google',
     API_GLOBAL_PREFIX: 'api/v1',
+    HEALTH_CHECK: 'Health Check',
+    PING: 'ping',
+    PONG: 'pong!',
 };
 
 export const TEXTS = {
