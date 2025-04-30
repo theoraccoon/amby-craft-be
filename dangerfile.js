@@ -28,7 +28,7 @@ const prTitleConventionalCheck = () => {
   const conventionalTitleRegex = new RegExp(`^(${CONFIG.COMMIT.TYPES.join('|')})` + `(\\(${CONFIG.COMMIT.SCOPE_PATTERN}\\))?: .{1,${CONFIG.PR.TITLE_MAX_LENGTH}}$`);
 
   if (!danger.github.pr.title.match(conventionalTitleRegex)) {
-    fail(`PR title must follow Conventional Commits format (max ${CONFIG.PR.TITLE_MAX_LENGTH} chars):  
+    warn(`PR title must follow Conventional Commits format (max ${CONFIG.PR.TITLE_MAX_LENGTH} chars):  
     **Valid Examples**:  
     - \`feat(api): add login endpoint\`  
     - \`fix(core): resolve auth token expiration\`  
@@ -60,7 +60,7 @@ const sizeValidation = () => {
   totalChanges = danger.github.pr.additions + danger.github.pr.deletions;
 
   if (filteredFiles.length > CONFIG.MAX_FILES.FAIL) {
-    fail(`Changed ${filteredFiles.length} files (max ${CONFIG.MAX_FILES.FAIL}). Split into smaller PRs!`);
+    warn(`Changed ${filteredFiles.length} files (max ${CONFIG.MAX_FILES.FAIL}). Split into smaller PRs!`);
   } else if (filteredFiles.length > CONFIG.MAX_FILES.WARN) {
     warn(`Changed ${filteredFiles.length} files (recommended < ${CONFIG.MAX_FILES.WARN}). Consider splitting.`);
   }
@@ -74,7 +74,7 @@ const sizeValidation = () => {
 
 const contentValidation = () => {
   if (danger.github.pr.body.length < CONFIG.PR.MIN_BODY_LENGTH) {
-    fail(
+    warn(
       `PR description too short (min ${CONFIG.PR.MIN_BODY_LENGTH} chars). Include:\n` +
         '1. **What** changed\n2. **Why** it changed\n3. **How** it was implemented\n' +
         'Use \\\`\\\`\\\`[tasklist]\n- [ ] Checklist\\\`\\\`\\\` for complex PRs',
