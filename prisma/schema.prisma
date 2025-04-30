@@ -28,6 +28,7 @@ model User {
   roleId         String    @map("role_id")
   googleId       String?   @unique @map("google_id")
   refreshToken   String?   @map("refresh_token")
+  refreshTokenExpiry DateTime? @map("refresh_token_expiry")
   profilePicture String?   @map("profile_picture")
   password       String?
   createdAt      DateTime  @default(now()) @map("created_at")
