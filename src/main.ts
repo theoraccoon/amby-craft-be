@@ -11,45 +11,41 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 dotenv.config();
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
-    app.use(cookieParser());
-    const sessionSecret = process.env.SESSION_SECRET;
-    app.useGlobalInterceptors(new TransformInterceptor());
+  app.use(cookieParser());
+  const sessionSecret = process.env.SESSION_SECRET;
+  app.useGlobalInterceptors(new TransformInterceptor());
 
-    if (!sessionSecret) {
-        throw new Error(SESSION.SESSION_SECRET_UNDEFINED);
-    }
+  if (!sessionSecret) {
+    throw new Error(SESSION.SESSION_SECRET_UNDEFINED);
+  }
 
-    app.use(
-        session({
-            secret: sessionSecret,
-            resave: false,
-            saveUninitialized: false,
-        })
-    );
+  app.use(
+    session({
+      secret: sessionSecret,
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
 
-    app.setGlobalPrefix(API_CONSTANTS.API_GLOBAL_PREFIX);
-    setupSwagger(app);
+  app.setGlobalPrefix(API_CONSTANTS.API_GLOBAL_PREFIX);
+  setupSwagger(app);
 
-    app.use(passport.initialize());
+  app.use(passport.initialize());
 
-    app.use(passport.session());
+  app.use(passport.session());
 
-    await app.listen(process.env.PORT ?? 3000, RUNNINGS.BASE_HOST);
-    console.log(RUNNINGS.LISTENING_ON_PORT, process.env.PORT ?? 3000);
-    console.log(RUNNINGS.RUNNING_ON, ` ${await app.getUrl()}`);
+  await app.listen(process.env.PORT ?? 3000, RUNNINGS.BASE_HOST);
+  console.log(RUNNINGS.LISTENING_ON_PORT, process.env.PORT ?? 3000);
+  console.log(RUNNINGS.RUNNING_ON, ` ${await app.getUrl()}`);
 }
 
 bootstrap().catch((err: unknown) => {
-    if (err instanceof Error) {
-        console.error(
-            ERRORS.ERROR_STARTING_APPLICATION_MESSAGE,
-            err.message,
-            err.stack
-        );
-    } else {
-        console.error(ERRORS.ERROR_STARTING_APPLICATION_MESSAGE, String(err));
-    }
-    process.exit(1);
+  if (err instanceof Error) {
+    console.error(ERRORS.ERROR_STARTING_APPLICATION_MESSAGE, err.message, err.stack);
+  } else {
+    console.error(ERRORS.ERROR_STARTING_APPLICATION_MESSAGE, String(err));
+  }
+  process.exit(1);
 });

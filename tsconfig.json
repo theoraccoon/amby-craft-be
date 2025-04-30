@@ -1,28 +1,28 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "declaration": true,
-        "removeComments": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
-        "target": "ES2023",
-        "sourceMap": true,
-        "outDir": "./dist",
-        "baseUrl": "./",
-        "incremental": true,
-        "skipLibCheck": true,
-        "strictNullChecks": true,
-        "forceConsistentCasingInFileNames": true,
-        "noImplicitAny": false,
-        "strictBindCallApply": false,
-        "noFallthroughCasesInSwitch": false,
-        "paths": {
-            "@prisma/*": ["./src/prisma/*"],
-            "@strategies/*": ["./src/auth/strategies/*"],
-            "@google/*": ["./src/auth/google/*"],
-            "@config/*": ["./src/config/*"],
-        }
-    },
-    "include": ["src/**/*.ts", "test/**/*.ts", "dangerfile.js"]
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@prisma/*": ["./src/prisma/*"],
+      "@strategies/*": ["./src/auth/strategies/*"],
+      "@google/*": ["./src/auth/google/*"],
+      "@config/*": ["./src/config/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "dangerfile.js"]
 }
