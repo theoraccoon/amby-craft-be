@@ -5,8 +5,8 @@ import { GoogleAuthModule } from '@google/google-auth.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
-    imports: [GoogleAuthModule, UsersModule],
-    controllers: [AppController],
-    providers: [AppService],
+  imports: [GoogleAuthModule, UsersModule],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
