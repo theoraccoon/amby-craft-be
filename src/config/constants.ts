@@ -88,6 +88,7 @@ export const API_CONSTANTS = {
   HEALTH_CHECK: 'Health Check',
   PING: 'ping',
   PONG: 'pong!',
+  PATH: '/api/v1/auth',
 };
 
 export const TEXTS = {
