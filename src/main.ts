@@ -7,10 +7,17 @@ import { setupSwagger } from '@config/swagger.config';
 
 import * as dotenv from 'dotenv';
 import { API_CONSTANTS, ERRORS, RUNNINGS, SESSION } from '@config/constants';
+import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalPipes(new ValidationPipe());
 
   app.use(cookieParser());
   const sessionSecret = process.env.SESSION_SECRET;
