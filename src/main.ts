@@ -7,6 +7,7 @@ import { setupSwagger } from '@config/swagger.config';
 
 import * as dotenv from 'dotenv';
 import { API_CONSTANTS, ERRORS, RUNNINGS, SESSION } from '@config/constants';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 dotenv.config();
 
 async function bootstrap() {
@@ -14,6 +15,7 @@ async function bootstrap() {
 
   app.use(cookieParser());
   const sessionSecret = process.env.SESSION_SECRET;
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   if (!sessionSecret) {
     throw new Error(SESSION.SESSION_SECRET_UNDEFINED);
