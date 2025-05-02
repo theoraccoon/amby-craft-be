@@ -55,7 +55,7 @@ const commitValidation = () => {
 };
 
 const sizeValidation = () => {
-  filteredFiles = danger.git.modified_files.filter(file => !['project.json', 'project-lock.json'].includes(file));
+  filteredFiles = danger.git.modified_files.filter(file => !['package.json', 'package-lock.json'].includes(file));
 
   totalChanges = danger.github.pr.additions + danger.github.pr.deletions;
 
