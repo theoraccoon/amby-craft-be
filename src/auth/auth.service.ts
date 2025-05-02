@@ -78,8 +78,9 @@ export class AuthService {
       });
 
       return { accessToken };
-    } catch (error) {
-      throw new UnauthorizedException(`Invalid refresh token ${error.message}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      throw new UnauthorizedException(`Invalid refresh token ${message}`);
     }
   }
 
