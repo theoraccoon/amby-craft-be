@@ -99,7 +99,6 @@ export class AuthService {
   }
 
   // Method to handle user login
-  // It checks if the user exists and if the password is correct
   async login(body: LoginDto, response: Response): Promise<any> {
     const email = body.email;
     const password = body.password;
