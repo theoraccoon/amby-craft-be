@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { PrismaService } from '@prisma/prisma.service';
 import { User, Role } from '@prisma/client';
 import { CONTENT_TYPES } from 'src/config/constants';
+import { DatabaseService } from '@database/database.service';
 
 type UserWithRole = User & { role: Role };
 
@@ -11,7 +11,7 @@ type UserWithRole = User & { role: Role };
 export class TokenService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly prisma: PrismaService,
+    private readonly database: DatabaseService,
   ) {}
 
   async generateTokens(user: UserWithRole): Promise<[string, string]> {
@@ -38,7 +38,7 @@ export class TokenService {
   async updateRefreshToken(userId: string, refreshToken: string): Promise<void> {
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
 
-    await this.prisma.user.update({
+    await this.database.user.update({
       where: { id: userId },
       data: { refreshToken: hashedRefreshToken },
     });
