@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User, Role } from '@prisma/client';
-import { CONTENT_TYPES } from 'src/config/constants';
-import { DatabaseService } from '@database/database.service';
+import { CONTENT_TYPES } from '@config/constants';
+import { DatabaseService } from 'src/database/database.service';
 
 type UserWithRole = User & { role: Role };
 
