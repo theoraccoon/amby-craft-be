@@ -5,18 +5,18 @@ import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
+import { DatabaseService } from '@database/database.service';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtPayload } from './types';
-import { API_CONSTANTS, CONTENT_TYPES } from '@config/constants';
+import { API_CONSTANTS, AUTH_LITERALS, CONTENT_TYPES } from '@config/constants';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
-    private readonly databaseService: PrismaService,
+    private readonly databaseService: DatabaseService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
@@ -42,7 +42,7 @@ export class AuthService {
     const refreshToken = cookies.refreshToken;
 
     if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token missing');
+      throw new UnauthorizedException(AUTH_LITERALS.REFRESHTOKENMISSING);
     }
 
     try {
@@ -52,24 +52,24 @@ export class AuthService {
         where: { id: payload.userId },
       });
 
-      if (!user || !('refreshToken' in user) || !('refreshTokenExpiry' in user)) {
-        throw new UnauthorizedException('User not found or no stored refresh token');
+      if (!user || !(AUTH_LITERALS.REFRESHTOKEN in user) || !(AUTH_LITERALS.REFRESHTOKENEXPIRY in user)) {
+        throw new UnauthorizedException(AUTH_LITERALS.UNAUTHORIZEDEXCEPTION);
       }
 
       const currentTime = new Date();
       if (user.refreshTokenExpiry! < currentTime) {
-        throw new UnauthorizedException('Refresh token has expired');
+        throw new UnauthorizedException(AUTH_LITERALS.REFRESHTOKENEXPIRED);
       }
 
       const isTokenValid = await bcrypt.compare(refreshToken, String(user.refreshToken));
 
       if (!isTokenValid) {
-        throw new UnauthorizedException('Invalid refresh from db token');
+        throw new UnauthorizedException(AUTH_LITERALS.INVALIDREFRESHTOKENFROMDB);
       }
 
       const { accessToken, refreshToken: newRefreshToken } = await this.generateToken(user.id);
 
-      res.cookie('refreshToken', newRefreshToken, {
+      res.cookie(AUTH_LITERALS.REFRESHTOKEN, newRefreshToken, {
         httpOnly: true,
         secure: false,
         sameSite: 'lax',
@@ -80,7 +80,7 @@ export class AuthService {
       return { accessToken };
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error';
-      throw new UnauthorizedException(`Invalid refresh token ${message}`);
+      throw new UnauthorizedException(AUTH_LITERALS.INVALIDREFRESHTOKEN, message);
     }
   }
 
@@ -119,20 +119,20 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('Wrong credentials provided');
+      throw new UnauthorizedException(AUTH_LITERALS.WRONGCREDENTIALS);
     }
 
     const isPasswordValid = await this.userService.comparePassword(password, String(user.password));
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials provided');
+      throw new UnauthorizedException(AUTH_LITERALS.INVALIDCREDENTIALS);
     }
 
     const { password: _, refreshToken: __, googleId: ___, roleId: ____, refreshTokenExpiry: _____, ...userWithoutSensitiveData } = user;
 
     const { accessToken, refreshToken } = await this.generateToken(userWithoutSensitiveData.id);
 
-    response.cookie('refreshToken', refreshToken, {
+    response.cookie(AUTH_LITERALS.REFRESHTOKEN, refreshToken, {
       httpOnly: true,
       secure: false,
       sameSite: 'lax',
