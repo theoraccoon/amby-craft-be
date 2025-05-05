@@ -84,7 +84,7 @@ export class AuthService {
     }
   }
 
-  // Method to validate user credentials and create a new user
+  //Method to validate user credentials and create a new user
   async validateUser(body: CreateUserDto) {
     return this.userService.create(body);
   }
