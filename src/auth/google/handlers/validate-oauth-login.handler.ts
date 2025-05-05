@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ValidateOAuthLoginCommand } from '@google/commands/validate-oauth-login.command';
 import { InternalServerErrorException } from '@nestjs/common';
 import { TokenService } from '@google/services/token.service';
-import { DatabaseService } from '@database/database.service';
+import { DatabaseService } from 'src/database/database.service';
 
 @CommandHandler(ValidateOAuthLoginCommand)
 export class ValidateOAuthLoginHandler implements ICommandHandler<ValidateOAuthLoginCommand> {

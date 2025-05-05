@@ -7,7 +7,6 @@ import { ValidateOAuthLoginHandler } from '@google/handlers/validate-oauth-login
 import { CqrsModule } from '@nestjs/cqrs';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { PrismaService } from '@prisma/prisma.service';
 import { CONTENT_TYPES } from 'src/config/constants';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -28,6 +27,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
   ],
   controllers: [GoogleAuthController],
-  providers: [GoogleStrategy, GoogleAuthService, TokenService, PrismaService, ValidateOAuthLoginHandler],
+  providers: [GoogleStrategy, GoogleAuthService, TokenService, ValidateOAuthLoginHandler],
 })
 export class GoogleAuthModule {}

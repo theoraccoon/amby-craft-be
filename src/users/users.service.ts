@@ -4,7 +4,7 @@ import { Prisma, User } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import commonQuery from 'src/common/query/common.query';
-import { DatabaseService } from '@database/database.service';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class UsersService {
