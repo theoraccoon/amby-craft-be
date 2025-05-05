@@ -1,20 +1,18 @@
 version: '3'
 services:
-    db:
-        image: postgres
-        environment:
-            POSTGRES_PASSWORD: root
-        volumes:
-            - C:\Users\PaintsilTheophilus\Workspace\postgres-data:/var/lib/postgresql/data
-        ports:
-            - '5432:5432'
+  db:
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+    ports:
+      - '3808:3808'
 
-    pgadmin:
-        image: dpage/pgadmin4
-        environment:
-            PGADMIN_DEFAULT_EMAIL: theophilus.paintsil@coderaccoon.com
-            PGADMIN_DEFAULT_PASSWORD: root
-        ports:
-            - '8080:80'
-        depends_on:
-            - db
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: theophilus.paintsil@coderaccoon.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - '8080:80'
+    depends_on:
+      - db

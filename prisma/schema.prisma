@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -20,22 +20,22 @@ model Role {
 }
 
 model User {
-  id             String    @id @default(cuid())
-  firstName      String    @map("first_name")
-  lastName       String?   @map("last_name")
-  email          String    @unique
-  role           Role      @relation(fields: [roleId], references: [id])
-  roleId         String    @map("role_id")
-  googleId       String?   @unique @map("google_id")
-  refreshToken   String?   @map("refresh_token")
+  id                 String    @id @default(cuid())
+  firstName          String    @map("first_name")
+  lastName           String?   @map("last_name")
+  email              String    @unique
+  role               Role      @relation(fields: [roleId], references: [id])
+  roleId             String    @map("role_id")
+  googleId           String?   @unique @map("google_id")
+  refreshToken       String?   @map("refresh_token")
   refreshTokenExpiry DateTime? @map("refresh_token_expiry")
-  profilePicture String?   @map("profile_picture")
-  password       String?
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
-  courses        Course[]
-  lessons        Lesson[]
-  contents       Content[]
+  profilePicture     String?   @map("profile_picture")
+  password           String?
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  courses            Course[]
+  lessons            Lesson[]
+  contents           Content[]
 
   @@map("users")
 }

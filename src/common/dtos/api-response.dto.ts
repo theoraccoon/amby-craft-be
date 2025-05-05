@@ -33,7 +33,7 @@ export class ApiResponse<T> {
     return new ApiResponse<null>({
       status: 'error',
       message,
-      errors,
+      errors: errors || [],
     });
   }
 }
