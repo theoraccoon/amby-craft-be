@@ -88,6 +88,7 @@ export const API_CONSTANTS = {
   HEALTH_CHECK: 'Health Check',
   PING: 'ping',
   PONG: 'pong!',
+  PATH: '/api/v1/auth',
 };
 
 export const TEXTS = {
@@ -117,4 +118,16 @@ export const SWAGGER = {
   SWAGGER_API_DESCRIPTION: 'The Ambylon Craft API description',
   SWAGGER_API_VERSION: '1.0',
   SWAGGER_API_PATH: 'docs',
+};
+
+export const AUTH_LITERALS = {
+  REFRESHTOKENMISSING: 'Refresh token is missing',
+  REFRESHTOKEN: 'refreshToken',
+  REFRESHTOKENEXPIRY: 'refreshTokenExpiry',
+  UNAUTHORIZEDEXCEPTION: 'User not found or no stored refresh token',
+  REFRESHTOKENEXPIRED: 'Refresh token has expired',
+  INVALIDREFRESHTOKEN: 'Invalid refresh token',
+  INVALIDREFRESHTOKENFROMDB: 'Invalid refresh token from db',
+  WRONGCREDENTIALS: 'Wrong credentials provided',
+  INVALIDCREDENTIALS: 'Invalid credentials provided',
 };
