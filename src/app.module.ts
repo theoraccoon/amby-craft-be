@@ -3,7 +3,7 @@ import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { GoogleAuthModule } from '@google/google-auth.module';
 import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './auth/local/local.module';
 
 @Module({
   imports: [GoogleAuthModule, UsersModule, AuthModule],

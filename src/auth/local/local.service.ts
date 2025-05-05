@@ -5,12 +5,12 @@ import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
-import { PrismaService } from '../prisma/prisma.service';
-import { LoginDto } from './dto/login.dto';
-import { CreateUserDto } from './dto/create-user.dto';
-import { JwtPayload } from './types';
 import { API_CONSTANTS, CONTENT_TYPES } from '@config/constants';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '@prisma/prisma.service';
+import { JwtPayload } from '../types';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { LoginDto } from '../dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -132,9 +132,11 @@ export class AuthService {
 
     const { accessToken, refreshToken } = await this.generateToken(userWithoutSensitiveData.id);
 
+    const isProd = this.configService.get<string>('NODE_ENV') === 'production';
+
     response.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: false,
+      secure: isProd,
       sameSite: 'lax',
       maxAge: this.configService.get<number>('REFRESH_TOKEN_MAX_AGE') || 0,
       path: API_CONSTANTS.PATH,
