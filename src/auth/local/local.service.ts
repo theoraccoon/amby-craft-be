@@ -99,7 +99,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  // Method to handle user login
+  //Method to handle user login
   async login(body: LoginDto, response: Response): Promise<any> {
     const email = body.email;
     const password = body.password;
