@@ -134,7 +134,7 @@ export class AuthService {
 
     const isProd = this.configService.get<string>('NODE_ENV') === 'production';
 
-    response.cookie('refreshToken', refreshToken, {
+    response.cookie(AUTH_LITERALS.REFRESHTOKEN, refreshToken, {
       httpOnly: true,
       secure: isProd,
       sameSite: 'lax',
