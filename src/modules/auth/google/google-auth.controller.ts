@@ -1,6 +1,5 @@
 import { Controller, Get, UseGuards, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { GoogleAuthService } from '@google/services/google-auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { API_CONSTANTS, CONTENT_TYPES } from 'src/config/constants';
@@ -8,7 +7,7 @@ import { API_CONSTANTS, CONTENT_TYPES } from 'src/config/constants';
 @ApiTags(API_CONSTANTS.GOOGLE_API_TAG)
 @Controller()
 export class GoogleAuthController {
-  constructor(private readonly googleAuthService: GoogleAuthService) {}
+  constructor() {}
 
   @Get(API_CONSTANTS.GOOGLE_AUTH)
   @UseGuards(AuthGuard(API_CONSTANTS.GOOGLE))

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { ValidateOAuthLoginCommand } from '@google/commands/validate-oauth-login.command';
+import { ValidateOAuthLoginCommand } from 'src/modules/auth/google/commands/validate-oauth-login.command';
 
 interface GoogleUserInfo {
   googleId: string;

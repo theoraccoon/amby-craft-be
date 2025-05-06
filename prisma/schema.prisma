@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -20,78 +20,95 @@ model Role {
 }
 
 model User {
-  id             String    @id @default(cuid())
-  firstName      String    @map("first_name")
-  lastName       String?   @map("last_name")
-  email          String    @unique
-  role           Role      @relation(fields: [roleId], references: [id])
-  roleId         String    @map("role_id")
-  googleId       String?   @unique @map("google_id")
-  refreshToken   String?   @map("refresh_token")
+  id                 String    @id @default(cuid())
+  firstName          String    @map("first_name")
+  lastName           String?   @map("last_name")
+  email              String    @unique
+  roleId             String    @map("role_id")
+  googleId           String?   @unique @map("google_id")
+  refreshToken       String?   @map("refresh_token")
   refreshTokenExpiry DateTime? @map("refresh_token_expiry")
-  profilePicture String?   @map("profile_picture")
-  password       String?
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
-  courses        Course[]
-  lessons        Lesson[]
-  contents       Content[]
+  profilePicture     String?   @map("profile_picture")
+  password           String?
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  courses            Course[]
+
+  role Role @relation(fields: [roleId], references: [id])
 
   @@map("users")
 }
 
 model Course {
   id          String   @id @default(cuid())
+  authorId    String   @map("author_id")
   title       String
   description String?
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String   @map("user_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
-  lessons     Lesson[]
+
+  author  User     @relation(fields: [authorId], references: [id])
+  lessons Lesson[]
 
   @@map("courses")
 }
 
 model Lesson {
-  id           String     @id @default(cuid())
-  title        String
-  position     Int
-  user         User       @relation(fields: [userId], references: [id])
-  userId       String     @map("user_id")
-  course       Course     @relation(fields: [courseId], references: [id])
-  courseId     String     @map("course_id")
-  lessonType   LessonType @relation(fields: [lessonTypeId], references: [id])
-  lessonTypeId String     @map("lesson_type_id")
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
-  contents     Content[]
+  id        String   @id @default(cuid())
+  title     String
+  courseId  String   @map("course_id")
+  order     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  course Course  @relation(fields: [courseId], references: [id])
+  blocks Block[]
 
   @@map("lessons")
 }
 
-model LessonType {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  lessons     Lesson[]
+// model LessonType {
+//   id          String   @id @default(cuid())
+//   name        String
+//   description String?
+//   createdAt   DateTime @default(now()) @map("created_at")
+//   updatedAt   DateTime @updatedAt @map("updated_at")
+//   lessons     Lesson[]
 
-  @@map("lesson_types")
+//   @@map("lesson_types")
+// }
+
+// model Content {
+//   id        String   @id @default(cuid())
+//   position  Int
+//   user      User     @relation(fields: [userId], references: [id])
+//   userId    String   @map("user_id")
+//   lesson    Lesson   @relation(fields: [lessonId], references: [id])
+//   lessonId  String   @map("lesson_id")
+//   type      String
+//   data      Json
+//   createdAt DateTime @default(now()) @map("created_at")
+//   updatedAt DateTime @updatedAt @map("updated_at")
+
+//   @@map("contents")
+// }
+
+model Block {
+  id        String    @id @default(uuid())
+  lessonId  String
+  type      BlockType
+  content   Json
+  order     Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  lesson Lesson @relation(fields: [lessonId], references: [id])
 }
 
-model Content {
-  id        String   @id @default(cuid())
-  position  Int
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String   @map("user_id")
-  lesson    Lesson   @relation(fields: [lessonId], references: [id])
-  lessonId  String   @map("lesson_id")
-  type      String
-  data      Json
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("contents")
+enum BlockType {
+  TEXT
+  IMAGE
+  VIDEO
+  QUIZ
+  EMBED
 }

@@ -1,19 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback, Profile as GoogleProfile, StrategyOptions } from 'passport-google-oauth20';
-import { GoogleAuthService } from '@google/services/google-auth.service';
+import { Strategy, VerifyCallback, Profile as GoogleProfile } from 'passport-google-oauth20';
+import { GoogleAuthService } from 'src/modules/auth/google/services/google-auth.service';
 import { User } from '@prisma/client';
 import { API_CONSTANTS, TEXTS } from 'src/config/constants';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, API_CONSTANTS.GOOGLE) {
-  constructor(private readonly googleAuthService: GoogleAuthService) {
+  constructor(
+    configService: ConfigService,
+    private readonly googleAuthService: GoogleAuthService,
+  ) {
     super({
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      clientID: configService.get<string>('GOOGLE_CLIENT_ID') || '',
+      clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET') || '',
+      callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL'),
       scope: [TEXTS.EMAIL, TEXTS.PROFILE],
-    } as StrategyOptions);
+      passReqToCallback: true,
+    });
   }
 
   async validate(accessToken: string, refreshToken: string, profile: GoogleProfile, done: VerifyCallback): Promise<any> {

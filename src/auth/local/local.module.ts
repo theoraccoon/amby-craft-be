@@ -8,12 +8,14 @@ import { AuthService } from './local.service';
 import { RegisterHandler } from './handlers/register.handler';
 import { LoginHandler } from './handlers/login.handler';
 import { RefreshTokenHandler } from './handlers/refresh-token.handler';
+import { GoogleStrategy } from '@strategies/google.strategy';
+import { GoogleAuthModule } from 'src/modules/auth/google/google-auth.module';
 
 @Module({
   imports: [
     UsersModule,
     CqrsModule,
-    ConfigModule,
+    GoogleAuthModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -22,7 +24,7 @@ import { RefreshTokenHandler } from './handlers/refresh-token.handler';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, RegisterHandler, LoginHandler, RefreshTokenHandler],
+  providers: [AuthService, GoogleStrategy, RegisterHandler, LoginHandler, RefreshTokenHandler],
   controllers: [AuthController],
 })
 export class AuthModule {}
