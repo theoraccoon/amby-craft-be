@@ -26,5 +26,5 @@
       "@modules/*": ["./src/modules/*"]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "dangerfile.js", "prisma/**/*.ts"]
+  "include": ["src/**/*", "test/**/*.ts", "dangerfile.js", "prisma/**/*.ts"]
 }
