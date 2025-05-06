@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CreateCourseHandler } from './commands/handlers/create-course.handler';
-import { CoursesController } from './course.controller';
+import { CoursesController } from './courses.controller';
 import { GetCourseHandler } from './queries/handlers/get-course-by-id.handler';
 
 @Module({
@@ -9,4 +9,4 @@ import { GetCourseHandler } from './queries/handlers/get-course-by-id.handler';
   controllers: [CoursesController],
   providers: [CreateCourseHandler, GetCourseHandler],
 })
-export class CoursesModule {}
+export class CourseModule {}

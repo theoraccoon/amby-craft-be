@@ -5,11 +5,11 @@ import { GoogleAuthModule } from '@google/google-auth.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { CoursesModule } from './modules/course/course.module';
+import { CourseModule } from './modules/course/courses.module';
 import { DatabaseModule } from '@database/database.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, GoogleAuthModule, UsersModule, AuthModule, CoursesModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, GoogleAuthModule, UsersModule, AuthModule, CourseModule],
   controllers: [AppController],
   providers: [AppService],
 })
