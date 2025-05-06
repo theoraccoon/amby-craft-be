@@ -9,7 +9,8 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
-    "build": "nest build",
+    "build": "nest build && npm run copy:lang",
+    "copy:lang": "cp -r src/config/lang dist/src/config",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
