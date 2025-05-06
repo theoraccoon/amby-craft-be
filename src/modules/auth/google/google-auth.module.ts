@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { GoogleAuthController } from 'src/modules/auth/google/google-auth.controller';
 import { GoogleAuthService } from 'src/modules/auth/google/services/google-auth.service';
-import { TokenService } from '@google/services/token.service';
+import { TokenService } from 'src/modules/auth/google/services/token.service';
 import { ValidateOAuthLoginHandler } from 'src/modules/auth/google/handlers/validate-oauth-login.handler';
 import { CqrsModule } from '@nestjs/cqrs';
 import { PassportModule } from '@nestjs/passport';
