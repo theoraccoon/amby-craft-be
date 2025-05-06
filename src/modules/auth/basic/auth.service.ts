@@ -8,7 +8,7 @@ import { User } from '@prisma/client';
 import { DatabaseService } from '@database/database.service';
 import { LoginDto } from 'src/modules/auth/dto/login.dto';
 import { CreateUserDto } from 'src/modules/auth/dto/create-user.dto';
-import { JwtPayload } from '../modules/auth/types';
+import { JwtPayload } from 'src/modules/auth/types/index';
 import { API_CONSTANTS, AUTH_LITERALS, CONTENT_TYPES } from '@config/constants';
 import { ConfigService } from '@nestjs/config';
 
