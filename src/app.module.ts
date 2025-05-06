@@ -7,9 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { CourseModule } from './modules/course/courses.module';
 import { DatabaseModule } from '@database/database.module';
+import { LessonModule } from '@modules/lesson/lesson.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, GoogleAuthModule, UsersModule, AuthModule, CourseModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, GoogleAuthModule, UsersModule, AuthModule, CourseModule, LessonModule],
   controllers: [AppController],
   providers: [AppService],
 })
