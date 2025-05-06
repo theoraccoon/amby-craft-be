@@ -1,8 +1,8 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateCourseCommand } from './commands/create-course.command';
-import { CreateCourseDto } from './dto/create-course.dto';
 import { GetCourseQuery } from './queries/get-course-by-id.query';
+import { CreateCourseDto } from './dto/create-course.dto';
 
 @Controller('courses')
 export class CoursesController {
@@ -11,8 +11,10 @@ export class CoursesController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Post()
+  @Post(':author_id')
   async createCourse(@Body() createCourseDto: CreateCourseDto, @Param('author_id') authorId: string) {
+    console.log('createCourseDto:', createCourseDto);
+    console.log('authorId:', authorId);
     if (!authorId) {
       throw new Error('Author ID is missing');
     }

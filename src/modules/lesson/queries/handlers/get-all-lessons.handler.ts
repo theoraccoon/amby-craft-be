@@ -8,8 +8,13 @@ export class GetAllLessonsHandler implements IQueryHandler<GetAllLessonsQuery> {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async execute(): Promise<Lesson[] | []> {
-    return this.databaseService.lesson.findMany({
-      include: { blocks: true },
-    });
+    try {
+      return await this.databaseService.lesson.findMany({
+        include: { blocks: true },
+      });
+    } catch (error) {
+      console.error('Error fetching lessons:', error);
+      return [];
+    }
   }
 }
