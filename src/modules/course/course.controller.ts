@@ -1,5 +1,4 @@
-import { Controller, Post, Body, Req, Get, Param } from '@nestjs/common';
-import { Request } from 'express';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateCourseCommand } from './commands/create-course.command';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -13,12 +12,11 @@ export class CoursesController {
   ) {}
 
   @Post()
-  async createCourse(@Body() createCourseDto: CreateCourseDto, @Req() req: Request & { user?: { id: string } }) {
-    const authorId = req.user?.id || '';
+  async createCourse(@Body() createCourseDto: CreateCourseDto, @Param('author_id') authorId: string) {
     if (!authorId) {
       throw new Error('Author ID is missing');
     }
-    return this.commandBus.execute(new CreateCourseCommand(createCourseDto.title, createCourseDto.description || '', authorId));
+    return this.commandBus.execute(new CreateCourseCommand(createCourseDto, authorId));
   }
 
   @Get(':id')

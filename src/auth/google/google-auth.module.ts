@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { GoogleAuthController } from '@google/google-auth.controller';
-import { GoogleStrategy } from '@strategies/google.strategy';
 import { GoogleAuthService } from '@google/services/google-auth.service';
 import { TokenService } from '@google/services/token.service';
 import { ValidateOAuthLoginHandler } from '@google/handlers/validate-oauth-login.handler';
@@ -13,8 +12,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    PassportModule,
     ConfigModule,
+    PassportModule,
     CqrsModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -28,6 +27,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
   ],
   controllers: [GoogleAuthController],
-  providers: [GoogleStrategy, GoogleAuthService, TokenService, DatabaseService, ValidateOAuthLoginHandler],
+  providers: [GoogleAuthService, TokenService, DatabaseService, ValidateOAuthLoginHandler],
+  exports: [GoogleAuthService],
 })
 export class GoogleAuthModule {}
