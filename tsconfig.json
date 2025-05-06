@@ -25,5 +25,5 @@
       "@common/*": ["./src/common/*"]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "dangerfile.js"]
+  "include": ["src/**/*.ts", "test/**/*.ts", "dangerfile.js", "prisma/**/*.ts"]
 }
