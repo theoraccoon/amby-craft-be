@@ -7,8 +7,8 @@ import { DatabaseService } from '@database/database.service';
 export class CreateCourseHandler implements ICommandHandler<CreateCourseCommand> {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async execute(command: CreateCourseCommand): Promise<Course> {
-    const { title, description, authorId } = command;
+  async execute({ createCourseRequest, authorId }: CreateCourseCommand): Promise<Course> {
+    const { title, description } = createCourseRequest;
     return this.databaseService.course.create({
       data: {
         title,
