@@ -18,10 +18,11 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@prisma/*": ["./src/prisma/*"],
+      "@database/*": ["./src/database/*"],
       "@strategies/*": ["./src/auth/strategies/*"],
       "@google/*": ["./src/auth/google/*"],
-      "@config/*": ["./src/config/*"]
+      "@config/*": ["./src/config/*"],
+      "@common/*": ["./src/common/*"]
     }
   },
   "include": ["src/**/*.ts", "test/**/*.ts", "dangerfile.js"]
