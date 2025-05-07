@@ -10,8 +10,8 @@ export class ApiResponse<T> {
   @ApiProperty({ required: false })
   data?: T;
 
-  @ApiProperty({ type: [String], required: false })
-  errors?: any[];
+  @ApiProperty({ type: [Object] })
+  errors?: unknown[];
 
   @ApiProperty()
   timestamp: Date;
@@ -29,11 +29,11 @@ export class ApiResponse<T> {
     });
   }
 
-  static error(message: string, errors?: any[]): ApiResponse<null> {
+  static error(message: string, errors?: unknown[]): ApiResponse<null> {
     return new ApiResponse<null>({
       status: 'error',
       message,
-      errors: errors || [],
+      errors: errors,
     });
   }
 }
