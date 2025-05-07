@@ -80,15 +80,15 @@ export const CONTENT_TYPES = {
 };
 
 export const API_CONSTANTS = {
-  GOOGLE_API_TAG: 'Google Auth',
-  GOOGLE_AUTH: 'auth/google',
-  GOOGLE_AUTH_CALLBACK: 'auth/google/callback',
-  GOOGLE: 'google',
-  API_GLOBAL_PREFIX: 'api/v1',
-  HEALTH_CHECK: 'Health Check',
-  PING: 'ping',
-  PONG: 'pong!',
-  PATH: '/api/v1/auth',
+  GOOGLE_API_TAG: 'apiConstants.googleApiTag',
+  GOOGLE_AUTH: 'apiConstants.googleAuthPath',
+  GOOGLE_AUTH_CALLBACK: 'apiConstants.googleAuthCallbackPath',
+  GOOGLE: 'apiConstants.google',
+  API_GLOBAL_PREFIX: 'apiConstants.apiPath',
+  HEALTH_CHECK: 'apiConstants.healthCheck',
+  PING: 'apiConstants.ping',
+  PONG: 'apiConstants.pongResponse',
+  PATH: 'apiConstants.authPath',
 };
 
 export const TEXTS = {
@@ -114,10 +114,10 @@ export const RUNNINGS = {
 };
 
 export const SWAGGER = {
-  SWAGGER_API: 'Ambylon Craft API',
-  SWAGGER_API_DESCRIPTION: 'The Ambylon Craft API description',
-  SWAGGER_API_VERSION: '1.0',
-  SWAGGER_API_PATH: 'docs',
+  SWAGGER_API: 'swagger.swaggerAPI',
+  SWAGGER_API_DESCRIPTION: 'swagger.apiDocsDescription',
+  SWAGGER_API_VERSION: 'swagger.apiDocsVersion',
+  SWAGGER_API_PATH: 'swagger.apiPath',
 };
 
 export const AUTH_LITERALS = {

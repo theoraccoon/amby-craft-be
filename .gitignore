@@ -45,6 +45,7 @@ lerna-debug.log*
 .temp
 .tmp
 /db_data
+/mysql-init
 
 # Runtime data
 pids

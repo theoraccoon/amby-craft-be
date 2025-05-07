@@ -9,6 +9,7 @@ export class CreateCourseHandler implements ICommandHandler<CreateCourseCommand>
 
   async execute({ createCourseRequest, authorId }: CreateCourseCommand): Promise<Course> {
     const { title, description } = createCourseRequest;
+
     return this.databaseService.course.create({
       data: {
         title,
