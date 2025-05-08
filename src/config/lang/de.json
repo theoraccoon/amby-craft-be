@@ -1,0 +1,60 @@
+{
+  "auth": {
+    "refreshTokenMissing": "Aktualisierungstoken fehlt",
+    "unauthorizedException": "Benutzer wurde nicht gefunden oder es ist kein gespeichertes Aktualisierungstoken vorhanden",
+    "refreshTokenExpired": "Aktualisierungstoken ist abgelaufen",
+    "invalidRefreshToken": "Ungültiges Aktualisierungstoken",
+    "wrongCredentials": "Falsche Zugangsdaten angegeben",
+    "invalidCredentials": "Ungültige Zugangsdaten angegeben"
+  },
+  "session": {
+    "secretUndefined": "SESSION_SECRET ist nicht in den Umgebungsvariablen definiert"
+  },
+  "errors": {
+    "errorStartingApplication": "Fehler beim Starten der Anwendung:"
+  },
+  "server": {
+    "serverStarted": "Die Anwendung läuft unter:",
+    "serverStopped": "Server wurde beendet",
+    "serverError": "Serverfehler",
+    "listeningOn": "Wartet auf Port",
+    "listeningOnHost": "Wartet auf Host",
+    "baseHost": "0.0.0.0"
+  },
+  "database": {
+    "connected": "Verbindung zur Datenbank wurde erfolgreich hergestellt",
+    "disconnected": "Verbindung zur Datenbank wurde getrennt",
+    "errorConnecting": "Fehler beim Herstellen der Verbindung zur Datenbank"
+  },
+  "user": {
+    "userCreated": "Benutzer wurde erfolgreich erstellt",
+    "userUpdated": "Benutzer wurde erfolgreich aktualisiert",
+    "userDeleted": "Benutzer wurde erfolgreich gelöscht",
+    "userNotFound": "Benutzer wurde nicht gefunden",
+    "userAlreadyExists": "Benutzer ist bereits vorhanden"
+  },
+  "swagger": {
+    "swaggerAPI": "Ambylon Craft API",
+    "apiDocsDescription": "Beschreibung der Ambylon Craft API",
+    "apiDocsVersion": "1.0.0",
+    "apiPath": "docs"
+  },
+  "apiConstants": {
+    "healthCheck": "Systemüberprüfung",
+    "apiVersion": "v1",
+    "apiPath": "/api/v1",
+    "google": "google",
+    "googleAuthPath": "auth/google",
+    "googleAuthCallbackPath": "auth/google/callback",
+    "googleApiTag": "Google-Authentifizierung",
+    "authPath": "/api/v1/auth",
+    "authTag": "Authentifizierung",
+    "userSignupPath": "/api/v1/auth/signup",
+    "userLoginPath": "/api/v1/auth/login",
+    "refreshTokenPath": "/api/v1/auth/refresh-token",
+    "userPath": "/api/v1/user",
+    "ping": "Ping",
+    "pingPath": "/api/v1/ping",
+    "pongResponse": "Pong!"
+  }
+}
