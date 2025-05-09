@@ -1,4 +1,4 @@
-import { API_CONSTANTS } from '@config/constants';
+import { API_CONSTANTS } from '@common/config/constants';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

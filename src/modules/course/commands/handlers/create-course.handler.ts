@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Course } from '@prisma/client';
 import { CreateCourseCommand } from '../create-course.command';
-import { DatabaseService } from '@database/database.service';
+import { DatabaseService } from '@common/database/database.service';
 
 @CommandHandler(CreateCourseCommand)
 export class CreateCourseHandler implements ICommandHandler<CreateCourseCommand> {

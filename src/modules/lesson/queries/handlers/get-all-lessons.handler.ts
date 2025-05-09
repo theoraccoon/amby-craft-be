@@ -1,5 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { DatabaseService } from '@database/database.service';
+import { DatabaseService } from '@common/database/database.service';
 import { Lesson } from '@prisma/client';
 import { GetAllLessonsQuery } from '../get-all-lessons.query';
 

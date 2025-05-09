@@ -6,8 +6,8 @@ import * as session from 'express-session';
 import * as cookieParser from 'cookie-parser';
 import * as passport from 'passport';
 
-import { setupSwagger } from '@config/swagger.config';
-import { API_CONSTANTS, ERRORS, RUNNINGS, SESSION } from '@config/constants';
+import { setupSwagger } from '@common/config/swagger.config';
+import { API_CONSTANTS, ERRORS, RUNNINGS, SESSION } from '@common/config/constants';
 
 import { ResponseInterceptor } from 'src/common/interceptors/response.interceptor';
 import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
