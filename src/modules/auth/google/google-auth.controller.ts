@@ -2,7 +2,7 @@ import { Controller, Get, UseGuards, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
-import { API_CONSTANTS, CONTENT_TYPES } from 'src/config/constants';
+import { API_CONSTANTS, CONTENT_TYPES } from '@common/config/constants';
 
 @ApiTags(API_CONSTANTS.GOOGLE_API_TAG)
 @Controller()

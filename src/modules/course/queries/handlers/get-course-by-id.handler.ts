@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { Course } from '@prisma/client';
 import { GetCourseQuery } from '../get-course-by-id.query';
-import { DatabaseService } from '@database/database.service';
+import { DatabaseService } from '@common/database/database.service';
 
 @QueryHandler(GetCourseQuery)
 export class GetCourseHandler implements IQueryHandler<GetCourseQuery> {
