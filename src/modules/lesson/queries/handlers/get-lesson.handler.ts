@@ -1,6 +1,6 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetLessonQuery } from '../get-lesson.query';
-import { DatabaseService } from '@database/database.service';
+import { DatabaseService } from '@common/database/database.service';
 import { Lesson } from '@prisma/client';
 
 @QueryHandler(GetLessonQuery)

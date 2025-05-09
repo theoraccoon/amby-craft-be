@@ -1,15 +1,15 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '@modules/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
 import * as bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
-import { DatabaseService } from '@database/database.service';
+import { DatabaseService } from '@common/database/database.service';
 import { LoginDto } from 'src/modules/auth/dto/login.dto';
 import { CreateUserDto } from 'src/modules/auth/dto/create-user.dto';
 import { JwtPayload } from 'src/modules/auth/types/index';
-import { API_CONSTANTS, AUTH_LITERALS, CONTENT_TYPES } from '@config/constants';
+import { API_CONSTANTS, AUTH_LITERALS, CONTENT_TYPES } from '@common/config/constants';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
