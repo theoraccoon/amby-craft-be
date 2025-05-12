@@ -1,5 +1,4 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-
 import { UsersService } from '@modules/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
@@ -141,5 +140,12 @@ export class AuthService {
     });
 
     return { ...userWithoutSensitiveData, accessToken: accessToken };
+  }
+
+  async invalidateRefreshToken(userId: string): Promise<void> {
+    await this.databaseService.user.update({
+      where: { id: userId },
+      data: { refreshToken: null },
+    });
   }
 }

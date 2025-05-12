@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback, Profile as GoogleProfile } from 'passport-google-oauth20';
 import { GoogleAuthService } from 'src/modules/auth/google/services/google-auth.service';
-import { User } from '@prisma/client';
-import { API_CONSTANTS, TEXTS } from '@common/config/constants';
+import { ERRORS, TEXTS } from '@common/config/constants';
 import { ConfigService } from '@nestjs/config';
+import { InternalServerErrorException } from '@nestjs/common';
 
 @Injectable()
-export class GoogleStrategy extends PassportStrategy(Strategy, API_CONSTANTS.GOOGLE) {
+export class GoogleStrategy extends PassportStrategy(Strategy) {
   constructor(
-    configService: ConfigService,
+    private readonly configService: ConfigService,
     private readonly googleAuthService: GoogleAuthService,
   ) {
     super({
@@ -17,34 +17,36 @@ export class GoogleStrategy extends PassportStrategy(Strategy, API_CONSTANTS.GOO
       clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET') || '',
       callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL'),
       scope: [TEXTS.EMAIL, TEXTS.PROFILE],
-      passReqToCallback: true,
     });
   }
 
-  async validate(accessToken: string, refreshToken: string, profile: GoogleProfile, done: VerifyCallback): Promise<any> {
-    const { id, name, emails, photos } = profile;
+  async validate(accessToken: string, refreshToken: string, profile: GoogleProfile, done: VerifyCallback) {
+    try {
+      const { id, name, emails, photos } = profile;
 
-    const userInfo: GoogleUserInfo = {
-      googleId: id,
-      email: emails?.[0]?.value || '',
-      firstName: name?.givenName || '',
-      lastName: name?.familyName || '',
-      picture: photos?.[0]?.value || '',
-      accessToken,
-      refreshToken,
-    };
+      if (!emails || !emails[0]) {
+        return done(new InternalServerErrorException(ERRORS.ERROR_GOOGLE_PROFILE_MISSING_EMAIL));
+      }
 
-    const user = (await this.googleAuthService.validateOAuthLogin(userInfo)) as User;
-    done(null, user);
+      const userInfo = {
+        googleId: id,
+        email: emails[0].value || '',
+        firstName: name?.givenName || '',
+        lastName: name?.familyName || '',
+        picture: photos?.[0]?.value || '',
+        accessToken,
+        refreshToken,
+      };
+
+      const user = await this.googleAuthService.validateOAuthLogin(userInfo);
+
+      if (!user) {
+        return done(new InternalServerErrorException(ERRORS.USER_NOT_FOUND));
+      }
+
+      done(null, user);
+    } catch (error) {
+      done(error, false);
+    }
   }
-}
-
-interface GoogleUserInfo {
-  googleId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  picture: string;
-  accessToken: string;
-  refreshToken: string;
 }

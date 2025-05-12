@@ -6,11 +6,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GoogleStrategy } from 'src/modules/auth/strategies/google.strategy';
 import { GoogleAuthModule } from 'src/modules/auth/google/google-auth.module';
+import { SignOutHandler } from './handlers/signout.handler';
 import { CqrsModule } from '@nestjs/cqrs';
+import { JwtStrategy } from '../strategies/jwt.strategy';
 import { RegisterHandler } from './handlers/register.handler';
 
 @Module({
   imports: [
+    CqrsModule,
     UsersModule,
     CqrsModule,
     GoogleAuthModule,
@@ -22,7 +25,8 @@ import { RegisterHandler } from './handlers/register.handler';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, GoogleStrategy, RegisterHandler],
+  providers: [AuthService, GoogleStrategy, RegisterHandler, SignOutHandler, JwtStrategy],
   controllers: [AuthController],
+  exports: [JwtStrategy],
 })
 export class AuthModule {}

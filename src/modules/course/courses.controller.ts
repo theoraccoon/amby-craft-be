@@ -3,6 +3,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateCourseCommand } from './commands/create-course.command';
 import { GetCourseQuery } from './queries/get-course-by-id.query';
 import { CreateCourseDto } from './dto/create-course.dto';
+import { GetAllCoursesQuery } from './queries/get-all-courses.query';
 
 @Controller('courses')
 export class CoursesController {
@@ -11,10 +12,13 @@ export class CoursesController {
     private readonly queryBus: QueryBus,
   ) {}
 
+  @Get()
+  async getAllCourses() {
+    return this.queryBus.execute(new GetAllCoursesQuery());
+  }
+
   @Post(':author_id')
   async createCourse(@Body() createCourseDto: CreateCourseDto, @Param('author_id') authorId: string) {
-    console.log('createCourseDto:', createCourseDto);
-    console.log('authorId:', authorId);
     if (!authorId) {
       throw new Error('Author ID is missing');
     }
