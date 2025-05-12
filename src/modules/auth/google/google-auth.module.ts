@@ -6,9 +6,9 @@ import { ValidateOAuthLoginHandler } from 'src/modules/auth/google/handlers/vali
 import { CqrsModule } from '@nestjs/cqrs';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { DatabaseService } from '@database/database.service';
-import { CONTENT_TYPES } from 'src/config/constants';
+import { CONTENT_TYPES } from '@common/config/constants';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DatabaseService } from '@common/database/database.service';
 
 @Module({
   imports: [

@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiTags } from '@nestjs/swagger';
-import { API_CONSTANTS } from '@config/constants';
+import { API_CONSTANTS } from '@common/config/constants';
 
 @ApiTags(API_CONSTANTS.HEALTH_CHECK)
 @Controller()
