@@ -5,7 +5,7 @@ import { User, Role } from '@prisma/client';
 import { CONTENT_TYPES } from '@common/config/constants';
 import { DatabaseService } from '@common/database/database.service';
 
-type UserWithRole = User & { role: Role };
+type UserWithRole = Omit<User, 'role'> & { role: Role };
 
 @Injectable()
 export class TokenService {
