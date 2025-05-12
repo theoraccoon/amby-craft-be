@@ -3,6 +3,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBlockCommand } from './commands/create-block.command';
 import { CreateBlockDto } from './dto/create-block.dto';
 import { GetBlockQuery } from './queries/get-block-by-id.query';
+import { GetAllBlocksQuery } from './queries/get-all-blocks.query';
 
 @Controller('blocks')
 export class BlocksController {
@@ -10,6 +11,11 @@ export class BlocksController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
+
+  @Get()
+  async getAllBlocks() {
+    return this.queryBus.execute(new GetAllBlocksQuery());
+  }
 
   @Post()
   async createBlock(@Body() createBlockDto: CreateBlockDto) {

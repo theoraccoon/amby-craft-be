@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 // Initial roles
@@ -7,14 +8,20 @@ const roles = [
   { name: 'Content creator', description: 'A normal user', identifier: 'user' },
 ];
 
-// Main seeding function
-async function main() {
+async function seedRoles() {
   await prisma.role.createMany({
     data: roles,
-    skipDuplicates: true, // prevents duplicates if  reseeded
+    skipDuplicates: true,
   });
-
   console.log('✅ Roles seeded!');
+}
+
+async function seedCoursesAndUsers() {
+  const adminRole = await prisma.role.findUnique({ where: { identifier: 'admin' } });
+
+  if (!adminRole) {
+    throw new Error('❌ Role "admin" not found. Ensure roles are seeded before users.');
+  }
 
   await prisma.user.create({
     data: {
@@ -22,6 +29,7 @@ async function main() {
       lastName: 'Doe',
       email: 'john@example.com',
       password: 'hashed_password',
+      roleId: adminRole.id,
       courses: {
         create: [
           {
@@ -44,18 +52,24 @@ async function main() {
           },
         ],
       },
-      roleId: '1',
     },
   });
 
-  console.log('✅ Courses seeded!');
+  console.log('✅ Admin user and course seeded!');
+}
+
+async function main() {
+  await seedRoles();
+  await seedCoursesAndUsers();
 }
 
 main()
   .then(() => {
-    console.log('✅ Seed complete');
+    console.log('✅ Database seed complete');
+    void prisma.$disconnect();
   })
-  .catch(e => {
-    console.error(e);
+  .catch(error => {
+    console.error('❌ Seeding failed:', error);
+    void prisma.$disconnect();
     process.exit(1);
   });

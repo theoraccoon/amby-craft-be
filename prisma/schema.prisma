@@ -104,6 +104,8 @@ model Block {
   updatedAt DateTime  @updatedAt
 
   lesson Lesson @relation(fields: [lessonId], references: [id])
+
+  @@map("blocks")
 }
 
 enum BlockType {
