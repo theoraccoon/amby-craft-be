@@ -142,4 +142,11 @@ export class AuthService {
 
     return { ...userWithoutSensitiveData, accessToken: accessToken };
   }
+
+  async invalidateRefreshToken(userId: string): Promise<void> {
+    await this.databaseService.user.update({
+      where: { id: userId },
+      data: { refreshToken: null },
+    });
+  }
 }

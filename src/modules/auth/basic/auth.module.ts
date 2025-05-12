@@ -6,9 +6,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GoogleStrategy } from 'src/modules/auth/strategies/google.strategy';
 import { GoogleAuthModule } from 'src/modules/auth/google/google-auth.module';
+import { SignOutHandler } from './handlers/signout.handler';
+import { CqrsModule } from '@nestjs/cqrs';
+import { JwtStrategy } from '../strategies/jwt.strategy';
 
 @Module({
   imports: [
+    CqrsModule,
     UsersModule,
     GoogleAuthModule,
     JwtModule.registerAsync({
@@ -19,7 +23,8 @@ import { GoogleAuthModule } from 'src/modules/auth/google/google-auth.module';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, GoogleStrategy],
+  providers: [AuthService, GoogleStrategy, SignOutHandler, JwtStrategy],
   controllers: [AuthController],
+  exports: [JwtStrategy],
 })
 export class AuthModule {}
