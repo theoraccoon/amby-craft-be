@@ -46,6 +46,7 @@ lerna-debug.log*
 .tmp
 /db_data
 /mysql-init
+/prisma/generated/*
 
 # Runtime data
 pids

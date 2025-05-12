@@ -70,8 +70,9 @@ export const CONTENT_TYPES = {
   SPACER_BLOCK: 'spacer',
 
   //tokens
-  ACCESS_TOKEN_EXPIRY: '1h',
-  REFRESH_TOKEN_EXPIRY: '7d',
+  ACCESS_EXPIRY: '1h',
+  ACCESS_TOKEN_EXPIRY: 15 * 60 * 1000,
+  REFRESH_TOKEN_EXPIRY: 7 * 24 * 60 * 60 * 1000,
 
   // user
   USER_NOT_FOUND: 'User not found',
@@ -103,6 +104,13 @@ export const SESSION = {
 export const ERRORS = {
   ERROR_STARTING_APPLICATION: 'Error starting the application:',
   ERROR_STARTING_APPLICATION_MESSAGE: 'Error starting the application:',
+  ERROR_VALIDATING_OAUTH_LOGIN: 'Error validating OAuth login.',
+  ERROR_GOOGLE_PROFILE_MISSING_EMAIL: 'Google profile missing email.',
+  INTERNAL_SERVER_ERROR: 'Internal Server Error',
+  USER_NOT_FOUND: 'User not found or created',
+  DEFAULT_ROLE_NOT_FOUND: 'Default role Content Creator not found.',
+  ERROR_CREATINF_NEW_USER: 'Error creating new user.',
+  ERROR_GENERATING_TOKENS: 'Error generating tokens.',
 };
 
 export const RUNNINGS = {
@@ -123,6 +131,7 @@ export const SWAGGER = {
 export const AUTH_LITERALS = {
   REFRESHTOKENMISSING: 'Refresh token is missing',
   REFRESHTOKEN: 'refreshToken',
+  ACCESSTOKEN: 'accessToken',
   REFRESHTOKENEXPIRY: 'refreshTokenExpiry',
   UNAUTHORIZEDEXCEPTION: 'User not found or no stored refresh token',
   REFRESHTOKENEXPIRED: 'Refresh token has expired',
@@ -130,4 +139,5 @@ export const AUTH_LITERALS = {
   INVALIDREFRESHTOKENFROMDB: 'Invalid refresh token from db',
   WRONGCREDENTIALS: 'Wrong credentials provided',
   INVALIDCREDENTIALS: 'Invalid credentials provided',
+  FRONTEND_URL: 'http://localhost:3000',
 };
