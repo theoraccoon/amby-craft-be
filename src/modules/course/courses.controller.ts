@@ -12,7 +12,7 @@ export class CoursesController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Get('all')
+  @Get()
   async getAllCourses() {
     return this.queryBus.execute(new GetAllCoursesQuery());
   }
