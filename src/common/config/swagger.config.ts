@@ -1,5 +1,5 @@
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { SWAGGER } from '@config/constants';
+import { SWAGGER } from './constants';
 
 export const setupSwagger = app => {
   const config = new DocumentBuilder().setTitle(SWAGGER.SWAGGER_API).setDescription(SWAGGER.SWAGGER_API_DESCRIPTION).setVersion(SWAGGER.SWAGGER_API_VERSION).build();
