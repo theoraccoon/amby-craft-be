@@ -10,9 +10,11 @@ services:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${DB_NAME}
-    # volumes:
-    #   - mariadb_data:/var/lib/mysql
-    #   # Optional: remove or validate this if not needed or broken
-    #   # - ./mysql-init:/docker-entrypoint-initdb.d
     ports:
       - '${DB_PORT}:3306'
+    volumes:
+      - ./db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+    driver: local
