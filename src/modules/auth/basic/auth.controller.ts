@@ -2,15 +2,20 @@ import { Body, Controller, Get, Post, Req, Res, ValidationPipe } from '@nestjs/c
 import { Response, Request } from 'express';
 import { CreateUserDto } from 'src/modules/auth/dto/create-user.dto';
 import { LoginDto } from 'src/modules/auth/dto/login.dto';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
+import { CommandBus } from '@nestjs/cqrs';
+import { RegisterCommand } from './commands/register.command';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private commandBus: CommandBus,
+  ) {}
 
   @Post('signup')
   async signup(@Body(ValidationPipe) body: CreateUserDto) {
-    return this.authService.validateUser(body);
+    return this.commandBus.execute(new RegisterCommand(body));
   }
 
   @Get('refresh-token')
