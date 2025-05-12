@@ -1,13 +1,14 @@
-import { Controller, Get, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, UseGuards, Req, Res } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
-import { API_CONSTANTS, CONTENT_TYPES } from '@common/config/constants';
+import { Request, Response } from 'express';
+import { CONTENT_TYPES, API_CONSTANTS, AUTH_LITERALS } from '@common/config/constants';
+import { GoogleAuthService } from './services/google-auth.service';
 
 @ApiTags(API_CONSTANTS.GOOGLE_API_TAG)
 @Controller()
 export class GoogleAuthController {
-  constructor() {}
+  constructor(private readonly googleAuthService: GoogleAuthService) {}
 
   @Get(API_CONSTANTS.GOOGLE_AUTH)
   @UseGuards(AuthGuard(API_CONSTANTS.GOOGLE))
@@ -15,31 +16,32 @@ export class GoogleAuthController {
 
   @Get(API_CONSTANTS.GOOGLE_AUTH_CALLBACK)
   @UseGuards(AuthGuard(API_CONSTANTS.GOOGLE))
-  googleAuthRedirect(@Req() req: RequestWithUser) {
+  async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
     const { user } = req;
 
     if (!user) {
       throw new Error(CONTENT_TYPES.USER_NOT_FOUND);
     }
 
-    return {
-      message: CONTENT_TYPES.USER_INFO,
-      ...user,
+    const { accessToken, refreshToken } = req.user as {
+      accessToken: string;
+      refreshToken: string;
     };
+
+    res.cookie(AUTH_LITERALS.ACCESSTOKEN, accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: CONTENT_TYPES.ACCESS_TOKEN_EXPIRY,
+    });
+
+    res.cookie(AUTH_LITERALS.REFRESHTOKEN, refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: CONTENT_TYPES.REFRESH_TOKEN_EXPIRY,
+    });
+
+    return res.redirect(process.env.FRONTEND_URL || AUTH_LITERALS.FRONTEND_URL);
   }
-}
-
-interface GoogleUser {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  profilePicture: string;
-  role: string;
-  refreshToken: string;
-  accessToken: string;
-}
-
-interface RequestWithUser extends Request {
-  user: GoogleUser;
 }

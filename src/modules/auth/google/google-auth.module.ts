@@ -20,7 +20,7 @@ import { DatabaseService } from '@common/database/database.service';
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: configService.get<string>(CONTENT_TYPES.ACCESS_TOKEN_EXPIRY),
+          expiresIn: configService.get<string>(CONTENT_TYPES.ACCESS_EXPIRY),
         },
       }),
       inject: [ConfigService],
