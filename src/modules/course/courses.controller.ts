@@ -1,10 +1,13 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateCourseCommand } from './commands/create-course.command';
 import { GetCourseQuery } from './queries/get-course-by-id.query';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { GetAllCoursesQuery } from './queries/get-all-courses.query';
+import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser } from '@common/decorators/current-user.decorator';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('courses')
 export class CoursesController {
   constructor(
@@ -17,11 +20,12 @@ export class CoursesController {
     return this.queryBus.execute(new GetAllCoursesQuery());
   }
 
-  @Post(':author_id')
-  async createCourse(@Body() createCourseDto: CreateCourseDto, @Param('author_id') authorId: string) {
+  @Post('create')
+  async createCourse(@Body() createCourseDto: CreateCourseDto, @CurrentUser('userId') authorId: string) {
     if (!authorId) {
-      throw new Error('Author ID is missing');
+      throw new Error('Author ID is missing from token');
     }
+
     return this.commandBus.execute(new CreateCourseCommand(createCourseDto, authorId));
   }
 
