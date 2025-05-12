@@ -25,7 +25,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test": "npm run test:unit && npm run test:e2e",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prisma:migrate": "prisma migrate dev --name init",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
