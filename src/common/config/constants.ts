@@ -86,8 +86,8 @@ export const API_CONSTANTS = {
   GOOGLE: 'google',
   API_GLOBAL_PREFIX: '/api/v1',
   HEALTH_CHECK: 'Health Check',
-  PING: 'Ping',
-  PONG: 'Pong!',
+  PING: 'ping',
+  PONG: 'pong!',
   PATH: '/api/v1/auth',
 };
 
