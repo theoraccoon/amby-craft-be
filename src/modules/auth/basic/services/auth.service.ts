@@ -16,7 +16,7 @@ export class AuthService {
     private readonly userService: UsersService,
     private readonly databaseService: DatabaseService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {}
 
   // Method to store refresh token in the database
@@ -47,7 +47,7 @@ export class AuthService {
       const payload = await this.jwtService.verifyAsync<JwtPayload>(refreshToken);
 
       const user = await this.databaseService.user.findUnique({
-        where: { id: payload.userId },
+        where: { id: payload.sub },
       });
 
       if (!user || !(AUTH_LITERALS.REFRESHTOKEN in user) || !(AUTH_LITERALS.REFRESHTOKENEXPIRY in user)) {
