@@ -41,10 +41,8 @@ async function bootstrap(): Promise<void> {
   app.use(passport.session());
 
   // Global config
-  if (process.env.NODE_ENV !== 'development') {
-    app.useGlobalInterceptors(new ResponseInterceptor());
-    app.useGlobalFilters(new HttpExceptionFilter());
-  }
+  app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix(API_CONSTANTS.API_GLOBAL_PREFIX);
