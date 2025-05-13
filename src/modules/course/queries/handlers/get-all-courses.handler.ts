@@ -7,15 +7,9 @@ import { GetAllCoursesQuery } from '../get-all-courses.query';
 export class GetAllCoursesHandler implements IQueryHandler<GetAllCoursesQuery> {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async execute(): Promise<Course[] | []> {
+  async execute({ authorId }): Promise<Course[] | []> {
     return this.databaseService.course.findMany({
-      include: {
-        lessons: {
-          include: {
-            blocks: true,
-          },
-        },
-      },
+      where: { authorId: authorId },
     });
   }
 }
