@@ -1,3 +1,3 @@
 export class GetAllCoursesQuery {
-  constructor() {}
+  constructor(public readonly authorId: string) {}
 }

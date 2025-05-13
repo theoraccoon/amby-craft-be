@@ -18,8 +18,11 @@ export class CoursesController {
   ) {}
 
   @Get()
-  async getAllCourses() {
-    return this.queryBus.execute(new GetAllCoursesQuery());
+  async getAllCourses(@CurrentUser('userId') authorId: string) {
+    if (!authorId) {
+      throw new Error('Author ID is missing from token');
+    }
+    return this.queryBus.execute(new GetAllCoursesQuery(authorId));
   }
 
   @Post()
