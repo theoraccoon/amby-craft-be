@@ -57,7 +57,7 @@ CREATE TABLE `lessons` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Block` (
+CREATE TABLE `blocks` (
     `id` VARCHAR(191) NOT NULL,
     `lessonId` VARCHAR(191) NOT NULL,
     `type` ENUM('TEXT', 'IMAGE', 'VIDEO', 'QUIZ', 'EMBED') NOT NULL,
@@ -79,4 +79,4 @@ ALTER TABLE `courses` ADD CONSTRAINT `courses_author_id_fkey` FOREIGN KEY (`auth
 ALTER TABLE `lessons` ADD CONSTRAINT `lessons_course_id_fkey` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Block` ADD CONSTRAINT `Block_lessonId_fkey` FOREIGN KEY (`lessonId`) REFERENCES `lessons`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `blocks` ADD CONSTRAINT `blocks_lessonId_fkey` FOREIGN KEY (`lessonId`) REFERENCES `lessons`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
