@@ -9,8 +9,8 @@ import { InternalServerErrorException } from '@nestjs/common';
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private readonly configService: ConfigService,
-    private readonly googleAuthService: GoogleAuthService,
+    configService: ConfigService,
+    private readonly googleAuthService: GoogleAuthService
   ) {
     super({
       clientID: configService.get<string>('GOOGLE_CLIENT_ID') || '',
