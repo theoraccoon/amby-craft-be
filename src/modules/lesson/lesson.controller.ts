@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateLessonCommand } from './commands/create-lesson.command';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { GetLessonQuery } from './queries/get-lesson.query';
 import { GetAllLessonsQuery } from './queries/get-all-lessons.query';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('lessons')
 export class LessonsController {
   constructor(

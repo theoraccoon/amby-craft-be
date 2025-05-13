@@ -4,7 +4,6 @@ import { UsersService } from '@modules/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
 import * as bcrypt from 'bcrypt';
-import { User } from '@prisma/client';
 import { DatabaseService } from '@common/database/database.service';
 import { LoginDto } from 'src/modules/auth/dto/login.dto';
 import { CreateUserDto } from 'src/modules/auth/dto/create-user.dto';
@@ -48,7 +47,7 @@ export class AuthService {
     try {
       const payload = await this.jwtService.verifyAsync<JwtPayload>(refreshToken);
 
-      const user: User | null = await this.databaseService.user.findUnique({
+      const user = await this.databaseService.user.findUnique({
         where: { id: payload.userId },
       });
 
