@@ -10,6 +10,8 @@ import { SignOutHandler } from './handlers/signout.handler';
 import { CqrsModule } from '@nestjs/cqrs';
 import { JwtStrategy } from '../strategies/jwt.strategy';
 import { RegisterHandler } from './handlers/register.handler';
+import { RefreshTokenHandler } from './handlers/refresh-token.handler';
+import { LoginHandler } from './handlers/login.handler';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { RegisterHandler } from './handlers/register.handler';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, GoogleStrategy, RegisterHandler, SignOutHandler, JwtStrategy],
+  providers: [AuthService, GoogleStrategy, RegisterHandler, SignOutHandler, JwtStrategy, RefreshTokenHandler, LoginHandler],
   controllers: [AuthController],
   exports: [JwtStrategy],
 })
