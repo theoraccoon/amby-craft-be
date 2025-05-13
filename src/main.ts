@@ -41,7 +41,6 @@ async function bootstrap(): Promise<void> {
   app.use(passport.session());
 
   // Global config
-
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
 

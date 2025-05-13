@@ -3,10 +3,12 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { CreateCourseHandler } from './commands/handlers/create-course.handler';
 import { CoursesController } from './courses.controller';
 import { GetCourseHandler } from './queries/handlers/get-course-by-id.handler';
+import { GetAllCoursesHandler } from './queries/handlers/get-all-courses.handler';
+import { UpdateCourseHandler } from './commands/handlers/update-course.handler';
 
 @Module({
   imports: [CqrsModule],
   controllers: [CoursesController],
-  providers: [CreateCourseHandler, GetCourseHandler],
+  providers: [CreateCourseHandler, GetCourseHandler, GetAllCoursesHandler, UpdateCourseHandler],
 })
 export class CourseModule {}
