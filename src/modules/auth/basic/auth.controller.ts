@@ -2,21 +2,22 @@ import { Body, Controller, Get, HttpCode, Post, Req, Res, UseGuards, ValidationP
 import { Response, Request } from 'express';
 import { CreateUserDto } from 'src/modules/auth/dto/create-user.dto';
 import { LoginDto } from 'src/modules/auth/dto/login.dto';
-import { AuthService } from './auth.service';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { AuthService } from './services/auth.service';
 import { CommandBus } from '@nestjs/cqrs';
+import { RegisterCommand } from './commands/register.command';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { SignOutCommand } from './commands/signout.command';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly commandBus: CommandBus,
+    private commandBus: CommandBus,
   ) {}
 
   @Post('signup')
   async signup(@Body(ValidationPipe) body: CreateUserDto) {
-    return this.authService.validateUser(body);
+    return this.commandBus.execute(new RegisterCommand(body));
   }
 
   @UseGuards(JwtAuthGuard)

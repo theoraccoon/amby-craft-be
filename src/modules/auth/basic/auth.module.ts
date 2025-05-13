@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '@modules/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
@@ -9,11 +9,13 @@ import { GoogleAuthModule } from 'src/modules/auth/google/google-auth.module';
 import { SignOutHandler } from './handlers/signout.handler';
 import { CqrsModule } from '@nestjs/cqrs';
 import { JwtStrategy } from '../strategies/jwt.strategy';
+import { RegisterHandler } from './handlers/register.handler';
 
 @Module({
   imports: [
     CqrsModule,
     UsersModule,
+    CqrsModule,
     GoogleAuthModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -23,7 +25,7 @@ import { JwtStrategy } from '../strategies/jwt.strategy';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, GoogleStrategy, SignOutHandler, JwtStrategy],
+  providers: [AuthService, GoogleStrategy, RegisterHandler, SignOutHandler, JwtStrategy],
   controllers: [AuthController],
   exports: [JwtStrategy],
 })
