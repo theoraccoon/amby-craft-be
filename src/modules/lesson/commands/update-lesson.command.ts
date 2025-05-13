@@ -4,6 +4,6 @@ export class UpdateLessonCommand {
     public readonly data: {
       title?: string;
     },
-    public readonly userId: string
+    public readonly userId: string,
   ) {}
 }

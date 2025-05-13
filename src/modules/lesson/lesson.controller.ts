@@ -15,7 +15,7 @@ import { Lesson } from '@prisma/client';
 export class LessonsController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
   ) {}
 
   @Get()
