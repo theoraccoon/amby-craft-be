@@ -10,7 +10,7 @@ import { DeleteBlockCommand } from './commands/delete-block.command';
 export class BlocksController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
   ) {}
 
   @Get()
