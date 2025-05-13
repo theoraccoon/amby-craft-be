@@ -3,16 +3,18 @@ import { Response, Request } from 'express';
 import { CreateUserDto } from 'src/modules/auth/dto/create-user.dto';
 import { LoginDto } from 'src/modules/auth/dto/login.dto';
 import { AuthService } from './services/auth.service';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { RegisterCommand } from './commands/register.command';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { SignOutCommand } from './commands/signout.command';
+import { LoginQuery } from './queries/login.query';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private commandBus: CommandBus,
+    private queryBus: QueryBus,
   ) {}
 
   @Post('signup')
@@ -20,15 +22,14 @@ export class AuthController {
     return this.commandBus.execute(new RegisterCommand(body));
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('refresh-token')
   async refreshToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     return this.authService.validateRefreshToken(req, res);
   }
 
   @Post('login')
-  async login(@Res({ passthrough: true }) response: Response, @Body(ValidationPipe) body: LoginDto) {
-    return this.authService.login(body, response);
+  async login(@Res({ passthrough: true }) res: Response, @Body(ValidationPipe) body: LoginDto) {
+    return this.queryBus.execute(new LoginQuery(body, res));
   }
 
   @UseGuards(JwtAuthGuard)
