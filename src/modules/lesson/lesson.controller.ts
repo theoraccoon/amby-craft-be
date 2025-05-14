@@ -29,8 +29,11 @@ export class LessonsController {
   }
 
   @Get(':id')
-  async getLesson(@Param('id') id: string) {
-    return this.queryBus.execute(new GetLessonQuery(id));
+  async getLesson(@Param('id') id: string, @CurrentUser('userId') userId: string) {
+    if (!userId) {
+      throw new Error('Author ID is missing from token');
+    }
+    return this.queryBus.execute(new GetLessonQuery(id, userId));
   }
 
   @Patch(':id')
