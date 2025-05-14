@@ -4,11 +4,11 @@ services:
       context: .
       dockerfile: Dockerfile
     env_file:
-      - .env
+      - .env.docker
     environment:
       - NODE_ENV=${NODE_ENV}
       - PORT=${PORT}
-      - DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+      - DATABASE_URL=${DATABASE_URL}
     ports:
       - '${PORT}:${PORT}'
     depends_on:
@@ -21,30 +21,29 @@ services:
     image: mariadb:latest
     restart: always
     env_file:
-      - .env
+      - .env.docker
     command: --default-authentication-plugin=mysql_native_password
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${DB_NAME}
-    volumes:
-      - mariadb_data:/var/lib/mysql
-      # Optional: remove or validate this if not needed or broken
-      # - ./mysql-init:/docker-entrypoint-initdb.d
     ports:
       - '${DB_PORT}:3306'
+    volumes:
+      - ./db_data:/var/lib/mysql
     healthcheck:
-      test: ['CMD-SHELL', 'mysqladmin ping -u$$DB_USER -p$$DB_ROOT_PASSWORD --silent || exit 1']
+      test: ['CMD', 'bash', '-c', 'mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} || exit 1']
       interval: 10s
       timeout: 5s
-      retries: 10
-      start_period: 30s
+      retries: 5
+      start_period: 40s
     networks:
       - app-network
 
 volumes:
-  mariadb_data:
+  db_data:
+    driver: local
 
 networks:
   app-network:

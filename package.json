@@ -11,7 +11,7 @@
   "scripts": {
     "build": "nest build && npm run copy:lang",
     "docker:start": "powershell -ExecutionPolicy Bypass -File ./start-docker.ps1",
-    "copy:lang": "cp -r src/config/lang dist/src/config",
+    "copy:lang": "cp -r src/common/config/lang dist/src/common/config",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
