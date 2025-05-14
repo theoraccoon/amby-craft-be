@@ -24,8 +24,11 @@ export class LessonsController {
   }
 
   @Post()
-  async createLesson(@Body() createLessonDto: CreateLessonDto) {
-    return this.commandBus.execute(new CreateLessonCommand(createLessonDto));
+  async createLesson(@Body() createLessonDto: CreateLessonDto, @CurrentUser('userId') userId: string) {
+    if (!userId) {
+      throw new Error('Author ID is missing from token');
+    }
+    return this.commandBus.execute(new CreateLessonCommand(createLessonDto, userId));
   }
 
   @Get(':id')
