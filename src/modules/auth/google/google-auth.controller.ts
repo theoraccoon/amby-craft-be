@@ -11,7 +11,7 @@ import { ConfigService } from '@nestjs/config';
 export class GoogleAuthController {
   constructor(
     private readonly googleAuthService: GoogleAuthService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   @Get(API_CONSTANTS.GOOGLE_AUTH)
