@@ -82,9 +82,10 @@ export const CONTENT_TYPES = {
 
 export const API_CONSTANTS = {
   GOOGLE_API_TAG: 'Google Auth',
-  GOOGLE_AUTH: 'auth/google',
-  GOOGLE_AUTH_CALLBACK: 'auth/google/callback',
+  GOOGLE_AUTH: 'google',
+  GOOGLE_AUTH_CALLBACK: 'google/callback',
   GOOGLE: 'google',
+  JWT: 'jwt',
   API_GLOBAL_PREFIX: '/api/v1',
   HEALTH_CHECK: 'Health Check',
   PING: 'ping',
