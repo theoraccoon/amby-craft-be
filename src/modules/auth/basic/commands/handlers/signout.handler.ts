@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { SignOutCommand } from '../commands/signout.command';
-import { AuthService } from '../services/auth.service';
+import { SignOutCommand } from '../signout.command';
+import { AuthService } from '../../services/auth.service';
 
 @CommandHandler(SignOutCommand)
 export class SignOutHandler implements ICommandHandler<SignOutCommand> {

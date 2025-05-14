@@ -1,6 +1,6 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { AuthService } from '../services/auth.service';
-import { LoginQuery } from '../queries/login.query';
+import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
+import { AuthService } from '../../services/auth.service';
+import { LoginQuery } from '../login.query';
 
 @QueryHandler(LoginQuery)
 export class LoginHandler implements IQueryHandler<LoginQuery> {

@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { RegisterCommand } from '../commands/register.command';
-import { AuthService } from '../services/auth.service';
+import { RegisterCommand } from '../register.command';
+import { AuthService } from '../../services/auth.service';
 
 @CommandHandler(RegisterCommand)
 export class RegisterHandler implements ICommandHandler<RegisterCommand> {

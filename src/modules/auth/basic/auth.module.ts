@@ -6,12 +6,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GoogleStrategy } from 'src/modules/auth/strategies/google.strategy';
 import { GoogleAuthModule } from 'src/modules/auth/google/google-auth.module';
-import { SignOutHandler } from './handlers/signout.handler';
+import { SignOutHandler } from './commands/handlers/signout.handler';
 import { CqrsModule } from '@nestjs/cqrs';
 import { JwtStrategy } from '../strategies/jwt.strategy';
-import { RegisterHandler } from './handlers/register.handler';
-import { RefreshTokenHandler } from './handlers/refresh-token.handler';
-import { LoginHandler } from './handlers/login.handler';
+import { RegisterHandler } from './commands/handlers/register.handler';
+import { LoginHandler } from './queries/handlers/login.handler';
+import { RefreshTokenHandler } from './queries/handlers/refresh-token.handler';
 
 @Module({
   imports: [
