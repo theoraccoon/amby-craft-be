@@ -14,7 +14,7 @@ import { UpdateCourseCommand } from './commands/update-course.command';
 export class CoursesController {
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
   ) {}
 
   @Get()
