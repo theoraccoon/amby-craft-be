@@ -7,7 +7,7 @@ import { DatabaseService } from '@common/database/database.service';
 import { LoginDto } from 'src/modules/auth/dto/login.dto';
 import { CreateUserDto } from 'src/modules/auth/dto/create-user.dto';
 import { JwtPayload } from 'src/modules/auth/types/index';
-import { API_CONSTANTS, AUTH_LITERALS, CONTENT_TYPES } from '@common/config/constants';
+import { AUTH_LITERALS, CONTENT_TYPES } from '@common/config/constants';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class AuthService {
     private readonly userService: UsersService,
     private readonly databaseService: DatabaseService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {}
 
   // Method to store refresh token in the database
@@ -43,11 +43,13 @@ export class AuthService {
       throw new UnauthorizedException(AUTH_LITERALS.REFRESHTOKENMISSING);
     }
 
+    console.log('Refresh token:', refreshToken);
+
     try {
       const payload = await this.jwtService.verifyAsync<JwtPayload>(refreshToken);
 
       const user = await this.databaseService.user.findUnique({
-        where: { id: payload.userId },
+        where: { id: payload.sub },
       });
 
       if (!user || !(AUTH_LITERALS.REFRESHTOKEN in user) || !(AUTH_LITERALS.REFRESHTOKENEXPIRY in user)) {
@@ -69,13 +71,19 @@ export class AuthService {
 
       res.cookie(AUTH_LITERALS.REFRESHTOKEN, newRefreshToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'lax',
-        maxAge: this.configService.get<number>('REFRESH_TOKEN_MAX_AGE') || 0,
-        path: API_CONSTANTS.PATH,
+        secure: this.configService.get<string>('NODE_ENV') === 'development' ? false : true,
+        sameSite: 'strict',
+        maxAge: CONTENT_TYPES.REFRESH_TOKEN_EXPIRY,
+        path: '/',
       });
 
-      return { accessToken };
+      res.cookie(AUTH_LITERALS.ACCESSTOKEN, accessToken, {
+        httpOnly: true,
+        secure: this.configService.get<string>('NODE_ENV') === 'development' ? false : true,
+        sameSite: 'strict',
+        maxAge: CONTENT_TYPES.ACCESS_TOKEN_EXPIRY,
+        path: '/',
+      });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error';
       throw new UnauthorizedException(AUTH_LITERALS.INVALIDREFRESHTOKEN, message);
@@ -89,8 +97,8 @@ export class AuthService {
 
   // Method to generate JWT tokens
   async generateToken(userId: string) {
-    const accessToken = this.jwtService.sign({ userId }, { expiresIn: CONTENT_TYPES.ACCESS_TOKEN_EXPIRY });
-    const refreshToken = this.jwtService.sign({ userId }, { expiresIn: CONTENT_TYPES.REFRESH_TOKEN_EXPIRY });
+    const accessToken = this.jwtService.sign({ sub: userId }, { expiresIn: CONTENT_TYPES.ACCESS_TOKEN_EXPIRY });
+    const refreshToken = this.jwtService.sign({ sub: userId }, { expiresIn: CONTENT_TYPES.REFRESH_TOKEN_EXPIRY });
 
     await this.storeRefreshToken(userId, refreshToken);
 
@@ -130,21 +138,43 @@ export class AuthService {
 
     const { accessToken, refreshToken } = await this.generateToken(userWithoutSensitiveData.id);
 
-    response.cookie(AUTH_LITERALS.REFRESHTOKEN, refreshToken, {
+    response.cookie(AUTH_LITERALS.ACCESSTOKEN, accessToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      maxAge: this.configService.get<number>('REFRESH_TOKEN_MAX_AGE') || 0,
-      path: API_CONSTANTS.PATH,
+      secure: this.configService.get<string>('NODE_ENV') === 'development' ? false : true,
+      sameSite: 'strict',
+      maxAge: CONTENT_TYPES.ACCESS_TOKEN_EXPIRY,
+      path: '/',
     });
 
-    return { ...userWithoutSensitiveData, accessToken: accessToken };
+    response.cookie(AUTH_LITERALS.REFRESHTOKEN, refreshToken, {
+      httpOnly: true,
+      secure: this.configService.get<string>('NODE_ENV') === 'development' ? false : true,
+      sameSite: 'strict',
+      maxAge: CONTENT_TYPES.REFRESH_TOKEN_EXPIRY,
+      path: '/',
+    });
+
+    return { ...userWithoutSensitiveData };
   }
 
   async invalidateRefreshToken(userId: string): Promise<void> {
     await this.databaseService.user.update({
       where: { id: userId },
-      data: { refreshToken: null },
+      data: { refreshToken: null, refreshTokenExpiry: null },
     });
+  }
+
+  async signOut(req: Request, res: Response, userId: string): Promise<any> {
+    await this.invalidateRefreshToken(userId);
+
+    const cookieOptions = {
+      httpOnly: true,
+      secure: this.configService.get<string>('NODE_ENV') === 'development' ? false : true,
+      sameSite: 'strict' as const,
+      path: '/',
+    };
+
+    res.clearCookie(AUTH_LITERALS.ACCESSTOKEN, cookieOptions);
+    res.clearCookie(AUTH_LITERALS.REFRESHTOKEN, cookieOptions);
   }
 }
