@@ -8,13 +8,14 @@ import { RegisterCommand } from './commands/register.command';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { SignOutCommand } from './commands/signout.command';
 import { LoginQuery } from './queries/login.query';
+import { refreshTokenQuery } from './queries/refresh-token';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private commandBus: CommandBus,
-    private queryBus: QueryBus,
+    private queryBus: QueryBus
   ) {}
 
   @Post('signup')
@@ -24,7 +25,7 @@ export class AuthController {
 
   @Get('refresh-token')
   async refreshToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.authService.validateRefreshToken(req, res);
+    return this.queryBus.execute(new refreshTokenQuery(req, res));
   }
 
   @Post('login')
@@ -35,13 +36,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('sign-out')
   @HttpCode(204)
-  async signOut(@Req() req, @Res() res: Response): Promise<void> {
-    const user = req.user;
-    await this.commandBus.execute(new SignOutCommand(user.userId));
-
-    res.clearCookie('access_token');
-    res.clearCookie('refresh_token');
-
-    res.send();
+  async signOut(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const { userId } = (req as any).user;
+    return this.commandBus.execute(new SignOutCommand(res, userId));
   }
 }

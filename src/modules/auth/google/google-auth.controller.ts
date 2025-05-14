@@ -4,11 +4,15 @@ import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { CONTENT_TYPES, API_CONSTANTS, AUTH_LITERALS } from '@common/config/constants';
 import { GoogleAuthService } from './services/google-auth.service';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags(API_CONSTANTS.GOOGLE_API_TAG)
 @Controller()
 export class GoogleAuthController {
-  constructor(private readonly googleAuthService: GoogleAuthService) {}
+  constructor(
+    private readonly googleAuthService: GoogleAuthService,
+    private readonly configService: ConfigService
+  ) {}
 
   @Get(API_CONSTANTS.GOOGLE_AUTH)
   @UseGuards(AuthGuard(API_CONSTANTS.GOOGLE))
@@ -30,14 +34,14 @@ export class GoogleAuthController {
 
     res.cookie(AUTH_LITERALS.ACCESSTOKEN, accessToken, {
       httpOnly: true,
-      secure: true,
+      secure: this.configService.get<string>('NODE_ENV') === 'development' ? false : true,
       sameSite: 'strict',
       maxAge: CONTENT_TYPES.ACCESS_TOKEN_EXPIRY,
     });
 
     res.cookie(AUTH_LITERALS.REFRESHTOKEN, refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: this.configService.get<string>('NODE_ENV') === 'development' ? false : true,
       sameSite: 'strict',
       maxAge: CONTENT_TYPES.REFRESH_TOKEN_EXPIRY,
     });

@@ -10,7 +10,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 export class GoogleStrategy extends PassportStrategy(Strategy) {
   constructor(
     configService: ConfigService,
-    private readonly googleAuthService: GoogleAuthService
+    private readonly googleAuthService: GoogleAuthService,
   ) {
     super({
       clientID: configService.get<string>('GOOGLE_CLIENT_ID') || '',
