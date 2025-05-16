@@ -2,13 +2,12 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { DeleteLessonCommand } from '../delete-lesson.command';
 import { DatabaseService } from '@common/database/database.service';
-import { Lesson } from '@prisma/client';
 
 @CommandHandler(DeleteLessonCommand)
 export class DeleteLessonHandler implements ICommandHandler<DeleteLessonCommand> {
   constructor(private readonly db: DatabaseService) {}
 
-  async execute(command: DeleteLessonCommand): Promise<Lesson> {
+  async execute(command: DeleteLessonCommand): Promise<string> {
     const { lessonId, userId } = command;
 
     // First, check if the lesson exists and if the user has permission to delete it
@@ -37,10 +36,10 @@ export class DeleteLessonHandler implements ICommandHandler<DeleteLessonCommand>
     });
 
     // Then delete the lesson
-    const deletedLesson = await this.db.lesson.delete({
+    await this.db.lesson.delete({
       where: { id: lessonId },
     });
 
-    return deletedLesson;
+    return 'Lesson successfully deleted';
   }
 }
