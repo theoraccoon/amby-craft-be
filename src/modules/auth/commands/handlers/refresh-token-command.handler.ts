@@ -28,26 +28,6 @@ export class RefreshTokenCommandHandler implements ICommandHandler<RefreshTokenC
     return await this.generateToken(userId);
   }
 
-  // async setCookies(response: Response, accessToken: string, refreshToken: string) {
-  //   const isSecureCookie = this.configService.get<string>('NODE_ENV') === 'production';
-
-  //   response.cookie(AUTH_LITERALS.ACCESSTOKEN, accessToken, {
-  //     httpOnly: true,
-  //     secure: isSecureCookie,
-  //     sameSite: 'strict',
-  //     maxAge: CONTENT_TYPES.ACCESS_TOKEN_EXPIRY,
-  //     path: '/',
-  //   });
-
-  //   response.cookie(AUTH_LITERALS.REFRESHTOKEN, refreshToken, {
-  //     httpOnly: true,
-  //     secure: isSecureCookie,
-  //     sameSite: 'strict',
-  //     maxAge: CONTENT_TYPES.REFRESH_TOKEN_EXPIRY,
-  //     path: '/',
-  //   });
-  // }
-
   async generateToken(userId: string) {
     const tokenPayload: TokenPayload = {
       userId: hash(userId),
