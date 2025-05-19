@@ -1,4 +1,4 @@
-import { IsJSON, IsString, IsNumber } from '@nestjs/class-validator';
+import { IsString, IsNumber, IsObject } from '@nestjs/class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { BlockType } from '@prisma/client';
 
@@ -8,7 +8,7 @@ export class CreateBlockDto {
   type: BlockType;
 
   @ApiProperty()
-  @IsJSON()
+  @IsObject()
   content: Record<string, any>;
 
   @ApiProperty()

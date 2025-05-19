@@ -1,5 +1,8 @@
 import { CreateBlockDto } from '../dto/create-block.dto';
 
 export class CreateBlockCommand {
-  constructor(public readonly createBlockRequest: CreateBlockDto) {}
+  constructor(
+    public readonly createBlockRequest: CreateBlockDto,
+    public readonly userId: string,
+  ) {}
 }
