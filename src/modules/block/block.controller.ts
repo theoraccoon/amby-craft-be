@@ -24,8 +24,11 @@ export class BlocksController {
   }
 
   @Post()
-  async createBlock(@Body() createBlockDto: CreateBlockDto) {
-    return this.commandBus.execute(new CreateBlockCommand(createBlockDto));
+  async createBlock(@Body() createBlockDto: CreateBlockDto, @CurrentUser('userId') userId: string) {
+    if (!userId) {
+      throw new Error('Author ID is missing from token');
+    }
+    return this.commandBus.execute(new CreateBlockCommand(createBlockDto, userId));
   }
 
   @Get(':id')
