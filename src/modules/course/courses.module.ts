@@ -5,10 +5,11 @@ import { CoursesController } from './courses.controller';
 import { GetCourseHandler } from './queries/handlers/get-course-by-id.handler';
 import { GetAllCoursesHandler } from './queries/handlers/get-all-courses.handler';
 import { UpdateCourseHandler } from './commands/handlers/update-course.handler';
+import { DeleteCourseHandler } from './commands/handlers/delete-course.handler';
 
 @Module({
   imports: [CqrsModule],
   controllers: [CoursesController],
-  providers: [CreateCourseHandler, GetCourseHandler, GetAllCoursesHandler, UpdateCourseHandler],
+  providers: [CreateCourseHandler, GetCourseHandler, GetAllCoursesHandler, UpdateCourseHandler, DeleteCourseHandler],
 })
 export class CourseModule {}
