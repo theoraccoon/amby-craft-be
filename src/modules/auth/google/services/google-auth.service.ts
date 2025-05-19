@@ -3,16 +3,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { ValidateOAuthLoginCommand } from 'src/modules/auth/google/commands/validate-oauth-login.command';
 import { InternalServerErrorException } from '@nestjs/common';
 import { ERRORS } from '@common/config/constants';
-
-export interface GoogleUserInfo {
-  googleId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  picture: string;
-  accessToken: string;
-  refreshToken: string;
-}
+import { GoogleUserInfo } from '@modules/auth/types';
 
 @Injectable()
 export class GoogleAuthService {
