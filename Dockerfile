@@ -1,28 +1,14 @@
-# Stage 1: Build the application
-FROM node:22.13.1-alpine AS builder
+FROM node:23.11.1-alpine
 
-# Create app directory
 WORKDIR /app
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
-COPY prisma ./prisma/
 
-# Install app dependencies
 RUN npm install
-# Generate prisma client, leave out if generating in `postinstall` script
-RUN npx prisma generate
 
 COPY . .
 
+RUN npx prisma generate
 RUN npm run build
 
-FROM node:22.13.1-alpine
-
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/tsconfig*.json ./
-COPY --from=builder /app/dist ./dist
-
-EXPOSE 3000
-CMD ["npm", "run", "start"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:prod"]

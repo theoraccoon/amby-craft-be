@@ -7,6 +7,13 @@ export class SignOutHandler implements ICommandHandler<SignOutCommand> {
   constructor(private readonly authService: AuthService) {}
 
   async execute(command: SignOutCommand): Promise<void> {
-    await this.authService.invalidateRefreshToken(command.userId);
+    const { userId } = command;
+    if (!userId) {
+      throw new Error('User ID is required for sign out');
+    }
+    // Invalidate the refresh token for the user
+    // TODO:('Invalidate the refresh token for the user');
+
+    await this.authService.invalidateRefreshToken(userId);
   }
 }

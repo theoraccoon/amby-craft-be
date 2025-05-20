@@ -1,5 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { refreshTokenQuery } from '../../queries/refresh-token';
+import { refreshTokenQuery } from '../refresh-token';
 import { AuthService } from '../../services/auth.service';
 
 @QueryHandler(refreshTokenQuery)

@@ -16,7 +16,7 @@ export class AuthService {
     private readonly userService: UsersService,
     private readonly databaseService: DatabaseService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   // Method to store refresh token in the database
