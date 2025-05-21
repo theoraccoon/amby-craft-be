@@ -1,9 +1,5 @@
-import { Response } from 'express';
+import { RefreshTokenDto } from '../dto/refresh-token.dto';
 
 export class RefreshTokenCommand {
-  constructor(
-    public readonly refreshToken: string,
-    public readonly userId: string,
-    public readonly response: Response,
-  ) {}
+  constructor(public readonly refreshTokenRequest: RefreshTokenDto) {}
 }

@@ -12,6 +12,7 @@ import { API_CONSTANTS, ERRORS, RUNNINGS, SESSION } from '@common/config/constan
 import { ResponseInterceptor } from 'src/common/interceptors/response.interceptor';
 import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 import { ValidationPipe } from 'src/common/pipes/vaildation.pipe';
+import { ExcludeFieldsInterceptor } from '@common/interceptors/exclude-fields.interceptor';
 
 dotenv.config();
 
@@ -43,6 +44,7 @@ async function bootstrap(): Promise<void> {
   // Global config
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalInterceptors(new ExcludeFieldsInterceptor(['password']));
 
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix(API_CONSTANTS.API_GLOBAL_PREFIX);

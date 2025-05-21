@@ -16,11 +16,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
       clientID: configService.get<string>('GOOGLE_CLIENT_ID') || '',
       clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET') || '',
       callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL'),
+      state: true,
       scope: [TEXTS.EMAIL, TEXTS.PROFILE],
     });
   }
 
-  async validate(accessToken: string, refreshToken: string, profile: GoogleProfile) {
+  async validate(profile: GoogleProfile) {
     return this.commandBus.execute(new GoogleAuthCommand(profile));
   }
 }
