@@ -12,16 +12,7 @@ interface CommonQuery {
 }
 
 const commonQuery: CommonQuery = {
-  include: {
-    role: {
-      select: {
-        id: true,
-        name: true,
-        identifier: true,
-        description: true,
-      },
-    },
-  },
+  include: { role: true },
   omit: {
     password: true,
     refreshToken: true,

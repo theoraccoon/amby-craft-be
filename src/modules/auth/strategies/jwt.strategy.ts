@@ -1,37 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Request } from 'express';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import { AUTH_LITERALS } from '@common/config/constants';
 import { JwtPayload } from '../types';
-
-interface RequestWithCookies extends Request {
-  cookies: {
-    accessToken?: string;
-    [key: string]: any;
-  };
-}
+import { DatabaseService } from '@common/database/database.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(configService: ConfigService) {
-    const secret = configService.get<string>('JWT_SECRET');
-
-    if (!secret) {
-      throw new Error(AUTH_LITERALS.JWT_SECRET_NOT_FOUND);
-    }
+  constructor(
+    configService: ConfigService,
+    private readonly databaseService: DatabaseService,
+  ) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([(req: RequestWithCookies) => req?.cookies?.accessToken, ExtractJwt.fromAuthHeaderAsBearerToken()]),
+      jwtFromRequest: ExtractJwt.fromExtractors([(req: Request) => req.cookies?.accessToken, ExtractJwt.fromAuthHeaderAsBearerToken()]),
       ignoreExpiration: false,
-      secretOrKey: secret,
+      secretOrKey: configService.get<string>('JWT_SECRET'),
     });
   }
 
   async validate(payload: JwtPayload) {
+    const user = await this.databaseService.user.findUnique({
+      where: { id: payload.sub },
+      include: { role: true },
+    });
+
+    if (!user) throw new UnauthorizedException('User not found');
+
+    const { id, email, role } = user;
+
     return {
-      userId: payload.sub,
-      email: payload.email,
-      role: payload.role,
+      userId: id,
+      email: email,
+      role: role.identifier,
     };
   }
 }
