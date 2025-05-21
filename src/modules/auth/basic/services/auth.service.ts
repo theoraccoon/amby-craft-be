@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '@modules/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from 'express';
@@ -94,19 +94,7 @@ export class AuthService {
 
   // Method to validate user credentials and create a new user
   async validateUser(body: CreateUserDto) {
-    try {
-      const user = await this.userService.create(body);
-
-      if (!user) {
-        throw new BadRequestException(AUTH_LITERALS.USERNOTCREATED);
-      }
-      this.notificationsService.sendWelcomeEmail(body.email, body.firstName).catch(error => {
-        throw new BadRequestException(error);
-      });
-      return user;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return this.userService.create(body);
   }
 
   // Method to generate JWT tokens
