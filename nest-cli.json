@@ -8,6 +8,10 @@
       {
         "include": "src/config/lang/**/*",
         "outDir": "dist/src/config/lang"
+      },
+      {
+        "include": "assets/**/*",
+        "outDir": "dist/src/modules"
       }
     ]
   }

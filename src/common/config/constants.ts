@@ -143,4 +143,5 @@ export const AUTH_LITERALS = {
   FRONTEND_URL: 'http://localhost:3000',
   REDIRECT_URL: 'auth_redirect_url',
   JWT_SECRET_NOT_FOUND: 'JWT_SECRET is not defined in the environment configuration.',
+  USERNOTCREATED: 'User not created',
 };
