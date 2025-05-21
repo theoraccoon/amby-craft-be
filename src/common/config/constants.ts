@@ -142,4 +142,5 @@ export const AUTH_LITERALS = {
   INVALIDCREDENTIALS: 'Invalid credentials provided',
   FRONTEND_URL: 'http://localhost:3000',
   JWT_SECRET_NOT_FOUND: 'JWT_SECRET is not defined in the environment configuration.',
+  USERNOTCREATED: 'User not created',
 };

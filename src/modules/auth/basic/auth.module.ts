@@ -12,6 +12,7 @@ import { JwtStrategy } from '../strategies/jwt.strategy';
 import { RegisterHandler } from './commands/handlers/register.handler';
 import { LoginHandler } from './queries/handlers/login.handler';
 import { RefreshTokenHandler } from './queries/handlers/refresh-token.handler';
+import { NotificationsService } from '@modules/notifications/notifications.service';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { RefreshTokenHandler } from './queries/handlers/refresh-token.handler';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, GoogleStrategy, RegisterHandler, SignOutHandler, JwtStrategy, RefreshTokenHandler, LoginHandler],
+  providers: [AuthService, GoogleStrategy, RegisterHandler, SignOutHandler, JwtStrategy, RefreshTokenHandler, LoginHandler, NotificationsService],
   controllers: [AuthController],
   exports: [JwtStrategy],
 })
