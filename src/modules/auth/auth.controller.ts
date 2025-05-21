@@ -1,136 +1,85 @@
-import { Body, Controller, Get, HttpCode, Post, Query, Req, Res, UseGuards, ValidationPipe, Param } from '@nestjs/common';
-import { Response, Request, CookieOptions } from 'express';
-import { CreateUserDto } from 'src/modules/auth/dto/create-user.dto';
-import { LoginDto } from 'src/modules/auth/dto/login.dto';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { RegisterUserCommand } from './commands/register-user.command';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { SignOutCommand } from './commands/signout.command';
-import { LoginUserCommand } from './commands/login-user.command';
-import { GoogleAuthGuard } from './guards/google-auth.guard';
-import { AUTH_LITERALS, CONTENT_TYPES } from '@common/config/constants';
+import { AUTH_LITERALS } from '@common/config/constants';
+import { AuthUtils } from '@common/utils/auth.utils';
+import { Body, Controller, Get, HttpCode, Post, Req, Res, UseGuards, ValidationPipe, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { CommandBus } from '@nestjs/cqrs';
+import { Response, Request } from 'express';
+import { LoginUserCommand } from './commands/login-user.command';
+import { LogoutUserCommand } from './commands/logout-user.command';
+import { RegisterUserCommand } from './commands/register-user.command';
+import { CreateUserDto } from './dto/create-user.dto';
+import { LoginDto } from './dto/login.dto';
+import { GoogleAuthGuard } from './guards/google-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RefreshTokenCommand } from './commands/refresh-token.command';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Controller('auth')
 export class AuthController {
-  private readonly isProduction: boolean;
-  private readonly frontendUrl: string;
-
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus,
+    private readonly authUtils: AuthUtils,
     private readonly configService: ConfigService,
-  ) {
-    this.isProduction = this.configService.get<string>('NODE_ENV') === 'production';
-    this.frontendUrl = this.configService.get<string>('FRONTEND_URL') || AUTH_LITERALS.FRONTEND_URL;
-  }
+  ) {}
 
-  @Post('signup')
-  async signup(@Body(ValidationPipe) createUserRequest: CreateUserDto, @Res({ passthrough: true }) res: Response) {
-    const commandResult = await this.commandBus.execute(new RegisterUserCommand(createUserRequest));
-    const { accessToken, refreshToken, user } = commandResult;
-    await this.setCookies(res, accessToken, refreshToken);
+  @Post('login')
+  @HttpCode(200)
+  async login(@Res({ passthrough: true }) res: Response, @Body(ValidationPipe) body: LoginDto) {
+    const { accessToken, refreshToken, user } = await this.commandBus.execute(new LoginUserCommand(body));
+    this.authUtils.setAuthCookies(res, accessToken, refreshToken);
 
     return user;
   }
 
-  @Get('refresh-token')
-  async refreshToken(@Body() refreshTokenRequest: RefreshTokenDto) {
-    return this.commandBus.execute(new RefreshTokenCommand(refreshTokenRequest));
-  }
-
-  @Post('login')
-  async login(@Res({ passthrough: true }) res: Response, @Body(ValidationPipe) body: LoginDto) {
-    const commandResult = await this.queryBus.execute(new LoginUserCommand(body));
-    const { accessToken, refreshToken, user } = commandResult;
-    await this.setCookies(res, accessToken, refreshToken);
+  @Post('signup')
+  @HttpCode(201)
+  async signup(@Body(ValidationPipe) createUserRequest: CreateUserDto, @Res({ passthrough: true }) res: Response) {
+    const { accessToken, refreshToken, user } = await this.commandBus.execute(new RegisterUserCommand(createUserRequest));
+    this.authUtils.setAuthCookies(res, accessToken, refreshToken);
 
     return user;
   }
 
   @UseGuards(GoogleAuthGuard)
   @Get('login/google')
-  async initiateGoogleAuth(@Query('redirectUrl') redirectUrl: string, @Res({ passthrough: true }) res: Response) {
-    if (redirectUrl && this.isValidRedirectUrl(redirectUrl)) {
-      res.cookie(AUTH_LITERALS.REDIRECT_URL, redirectUrl, {
-        secure: this.isProduction,
-        sameSite: 'strict',
-        signed: true,
-        maxAge: 60000,
-      });
-    }
-  }
+  async initiateGoogleAuth() {}
 
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
-  async googleAuthRedirect(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const { accessToken, refreshToken } = req.cookies;
-    await this.setCookies(res, accessToken, refreshToken);
+  async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
+    const { accessToken, refreshToken } = req.user as { accessToken: string; refreshToken: string };
+    this.authUtils.setAuthCookies(res, accessToken, refreshToken);
 
-    const redirectUrl = this.getValidRedirectUrl(req, res);
+    const redirectUrl = this.authUtils.getValidRedirectUrl(req, res);
+    console.log('Redirecting to:', redirectUrl);
     return res.redirect(redirectUrl);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('sign-out/:userId')
-  @HttpCode(204)
-  async signOut(@Param('userId') userId: string, @Res({ passthrough: true }) res: Response) {
-    await this.commandBus.execute(new SignOutCommand(userId));
-    await this.flushCookies(res);
+  @Post('refresh-token')
+  @HttpCode(200)
+  async refreshToken(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const refreshTokenFromCookie = req.cookies[AUTH_LITERALS.REFRESHTOKEN];
 
-    return res.redirect('/');
-  }
+    if (!refreshTokenFromCookie) {
+      this.authUtils.flushAuthCookies(res);
+      throw new UnauthorizedException('Refresh token not found in cookies.');
+    }
 
-  private isValidRedirectUrl(url: string): boolean {
     try {
-      const allowedDomains = this.configService.get<string[]>('ALLOWED_REDIRECT_DOMAINS', []);
-      const parsedUrl = new URL(url);
-      return allowedDomains.includes(parsedUrl.origin);
-    } catch {
-      return false;
+      const newTokens = await this.commandBus.execute(new RefreshTokenCommand(refreshTokenFromCookie));
+      this.authUtils.setAuthCookies(res, newTokens.accessToken, newTokens.refreshToken);
+      return { message: 'Tokens refreshed successfully.' };
+    } catch (error) {
+      this.authUtils.flushAuthCookies(res);
+      throw error;
     }
   }
 
-  private getValidRedirectUrl(req: Request, res: Response): string {
-    const signedRedirectUrl = req.signedCookies?.[AUTH_LITERALS.REDIRECT_URL];
-
-    if (signedRedirectUrl && this.isValidRedirectUrl(signedRedirectUrl)) {
-      res.clearCookie(AUTH_LITERALS.REDIRECT_URL);
-      return signedRedirectUrl;
-    }
-
-    return this.frontendUrl;
-  }
-
-  async setCookies(res: Response, accessToken: string, refreshToken: string): Promise<void> {
-    const cookieOptions: CookieOptions = {
-      httpOnly: true,
-      secure: this.isProduction,
-      sameSite: 'strict',
-    };
-
-    res.cookie(AUTH_LITERALS.ACCESSTOKEN, accessToken, {
-      ...cookieOptions,
-      maxAge: CONTENT_TYPES.ACCESS_TOKEN_EXPIRY,
-    });
-
-    res.cookie(AUTH_LITERALS.REFRESHTOKEN, refreshToken, {
-      ...cookieOptions,
-      maxAge: CONTENT_TYPES.REFRESH_TOKEN_EXPIRY,
-    });
-  }
-
-  async flushCookies(res: Response): Promise<void> {
-    const cookieOptions: CookieOptions = {
-      httpOnly: true,
-      secure: this.isProduction,
-      sameSite: 'strict',
-      path: '/',
-    };
-
-    res.clearCookie(AUTH_LITERALS.ACCESSTOKEN, cookieOptions);
-    res.clearCookie(AUTH_LITERALS.REFRESHTOKEN, cookieOptions);
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  @HttpCode(204)
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const user = req.user as { userId: string };
+    await this.commandBus.execute(new LogoutUserCommand(user.userId));
+    this.authUtils.flushAuthCookies(res);
   }
 }

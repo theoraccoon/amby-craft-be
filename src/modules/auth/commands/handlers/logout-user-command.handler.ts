@@ -1,12 +1,12 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { SignOutCommand } from '../signout.command';
+import { LogoutUserCommand } from '../logout-user.command';
 import { TokenService } from '@modules/auth/services/token.service';
 
-@CommandHandler(SignOutCommand)
-export class SignOutHandler implements ICommandHandler<SignOutCommand> {
+@CommandHandler(LogoutUserCommand)
+export class LogoutUserCommandHandler implements ICommandHandler<LogoutUserCommand> {
   constructor(private readonly tokenService: TokenService) {}
 
-  async execute(command: SignOutCommand): Promise<void> {
+  async execute(command: LogoutUserCommand): Promise<void> {
     const { userId } = command;
     if (!userId) {
       throw new Error('User ID is required for sign out');

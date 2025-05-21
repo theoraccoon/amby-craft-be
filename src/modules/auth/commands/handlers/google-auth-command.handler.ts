@@ -17,7 +17,7 @@ export class GoogleAuthCommandHandler implements ICommandHandler<GoogleAuthComma
 
   async execute(command: GoogleAuthCommand) {
     const { googleProfile } = command;
-    const { id, name, emails, photos } = googleProfile;
+    const { id, name, emails } = googleProfile;
 
     if (!emails || !emails[0]) {
       throw new InternalServerErrorException(ERRORS.ERROR_GOOGLE_PROFILE_MISSING_EMAIL);
@@ -28,11 +28,10 @@ export class GoogleAuthCommandHandler implements ICommandHandler<GoogleAuthComma
       email: emails[0].value || '',
       firstName: name?.givenName || '',
       lastName: name?.familyName || '',
-      picture: photos?.[0]?.value || '',
     };
 
     try {
-      let user = await this.databaseService.user.findUnique({
+      const user = await this.databaseService.user.findUnique({
         where: { email: userInfo.email },
       });
 
@@ -41,7 +40,9 @@ export class GoogleAuthCommandHandler implements ICommandHandler<GoogleAuthComma
           ...userInfo,
           password: '',
         };
-        user = await this.commandBus.execute(new RegisterUserCommand(createUserRequest));
+
+        const registeredUser = await this.commandBus.execute(new RegisterUserCommand(createUserRequest));
+        return registeredUser;
       }
 
       const tokens = await this.tokenService.generateAndStoreTokens(String(user?.id), String(user?.email));
