@@ -1,79 +1,46 @@
 import { DatabaseService } from '@common/database/database.service';
-import { ForbiddenException, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { JwtService } from '@nestjs/jwt';
 import { RefreshTokenCommand } from '../refresh-token.command';
-import { CONTENT_TYPES } from '@common/config/constants';
-import { hash } from 'bcryptjs';
-import { TokenPayload } from '@modules/auth/types';
+import { TokenService } from '@modules/auth/services/token.service';
+import { UnauthorizedException } from '@nestjs/common';
+import { AUTH_LITERALS } from '@common/config/constants';
 import { compare } from 'bcrypt';
 
 @CommandHandler(RefreshTokenCommand)
 export class RefreshTokenCommandHandler implements ICommandHandler<RefreshTokenCommand> {
   constructor(
     private readonly databaseService: DatabaseService,
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    private readonly tokenService: TokenService,
   ) {}
 
   async execute(command: RefreshTokenCommand): Promise<any> {
-    const { userId, refreshToken } = command;
+    const { userId, refreshToken } = command.refreshTokenRequest;
 
-    const user = await this.verifyUserRefreshToken(userId, refreshToken);
-    if (!user) {
-      throw new UnauthorizedException('Invalid or expired refresh token');
+    if (!refreshToken) {
+      throw new UnauthorizedException(AUTH_LITERALS.REFRESHTOKENMISSING);
     }
 
-    return await this.generateToken(userId);
-  }
-
-  async generateToken(userId: string) {
-    const tokenPayload: TokenPayload = {
-      userId: hash(userId),
-    };
-
-    const accessToken = this.jwtService.sign(tokenPayload, { expiresIn: CONTENT_TYPES.ACCESS_TOKEN_EXPIRY });
-    const newRefreshToken = this.jwtService.sign(tokenPayload, { expiresIn: CONTENT_TYPES.REFRESH_TOKEN_EXPIRY });
-
-    await this.storeRefreshToken(userId, newRefreshToken);
-
-    return { accessToken, newRefreshToken };
-  }
-
-  async storeRefreshToken(userId: string, refreshToken: string) {
-    const hashedToken = await hash(refreshToken, 10);
-
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + 7);
-
-    await this.databaseService.user.update({
-      where: { id: userId },
-      data: {
-        refreshToken: hashedToken,
-        refreshTokenExpiry: expiryDate,
-      },
-    });
-  }
-
-  async verifyUserRefreshToken(userId: string, refreshToken: string) {
     try {
       const user = await this.databaseService.user.findUnique({
         where: { id: userId },
       });
 
-      if (!user || !user.refreshToken || !user.refreshTokenExpiry) {
-        throw new ForbiddenException('Invalid or expired refresh token');
+      if (!user || !(AUTH_LITERALS.REFRESHTOKEN in user) || !(AUTH_LITERALS.REFRESHTOKENEXPIRY in user)) {
+        throw new UnauthorizedException(AUTH_LITERALS.UNAUTHORIZEDEXCEPTION);
       }
 
-      const isAuthenticated = await compare(refreshToken, user?.refreshToken);
-      if (!isAuthenticated) {
-        throw new UnauthorizedException();
+      const isTokenValid = await compare(refreshToken, String(user.refreshToken));
+
+      if (!isTokenValid) {
+        throw new UnauthorizedException(AUTH_LITERALS.INVALIDREFRESHTOKENFROMDB);
       }
 
-      return user;
-    } catch {
-      throw new ForbiddenException('Invalid or expired refresh token');
+      const tokens = await this.tokenService.generateAndStoreTokens(user?.id, user?.email);
+
+      return tokens;
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      throw new UnauthorizedException(AUTH_LITERALS.INVALIDREFRESHTOKEN, message);
     }
   }
 }
