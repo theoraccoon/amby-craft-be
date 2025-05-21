@@ -9,6 +9,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { TokenService } from './services/token.service';
 import { AuthCommandHandlers } from './commands/handlers';
+import { AuthUtils } from '@common/utils/auth.utils';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { AuthCommandHandlers } from './commands/handlers';
       }),
     }),
   ],
-  providers: [TokenService, GoogleStrategy, JwtStrategy, ...AuthCommandHandlers],
+  providers: [AuthUtils, TokenService, GoogleStrategy, JwtStrategy, ...AuthCommandHandlers],
   controllers: [AuthController],
   exports: [JwtStrategy],
 })
