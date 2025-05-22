@@ -6,8 +6,12 @@
     "deleteOutDir": true,
     "assets": [
       {
-        "include": "src/config/lang/**/*",
-        "outDir": "dist/src/config/lang"
+        "include": "common/config/lang/**/*",
+        "outDir": "dist/src"
+      },
+      {
+        "include": "assets/**/*",
+        "outDir": "dist/src/modules"
       }
     ]
   }

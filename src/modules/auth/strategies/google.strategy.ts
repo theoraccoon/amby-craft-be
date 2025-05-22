@@ -26,6 +26,11 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  authorizationParams(): Record<string, string> {
+    return {
+      prompt: 'select_account',
+    };
+  }
   async validate(accessToken: string, refreshToken: string, profile: GoogleProfile, done: VerifyCallback): Promise<void> {
     try {
       const result = await this.commandBus.execute(new GoogleAuthCommand(profile));
