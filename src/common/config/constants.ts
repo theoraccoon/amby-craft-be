@@ -122,9 +122,56 @@ export const RUNNINGS = {
   BASE_HOST: '0.0.0.0',
 };
 
+const description = `
+**Ambylon Craft** is a modular, scalable content authoring platform designed for creating rich, interactive educational experiences. Inspired by tools like Rise 360, it enables content creators to structure learning materials through a flexible hierarchy of **Courses**, **Lessons**, and **Blocks** — each supporting multiple content types including text, images, video, quizzes, and embedded components.
+
+The backend is built using **NestJS** with a robust **CQRS architecture**, **Prisma ORM**, and a **MariaDB** database. Authentication is powered by **JWTs** with secure **cookie-based session management**, and includes support for **Google OAuth login**.
+
+---
+
+## ✨ Key Features
+
+- 📚 **Course Builder**: Authors can create and manage courses with nested lessons and dynamic blocks.
+- 🔒 **Authentication**: Secure login with JWT, refresh tokens, and Google social login.
+- ⚙️ **CQRS Pattern**: Clean separation of commands, queries, and handlers for maintainable domain logic.
+- 🛡️ **Session Management**: Access and refresh tokens handled via secure cookies.
+- 🧩 **Block-Based Authoring**: Modular content support (text, images, videos, quizzes, embeds).
+- 🔄 **Swagger-Enabled API**: Fully documented endpoints with secure JWT integration and social login redirect.
+- 📦 **Docker-Ready**: Containerized with support for production builds and Prisma migrations.
+- 🔍 **Validation, Interceptors, Filters**: Structured error handling and consistent API responses.
+
+---
+
+## 🧱 Architecture Overview
+
+- **Framework**: NestJS + TypeScript
+- **Design Pattern**: CQRS + DI + Modular DDD-inspired layers
+- **ORM**: Prisma with MariaDB (Dockerized)
+- **Authentication**: Passport.js with JWT + Google OAuth
+- **API Docs**: Swagger UI with JWT preauthorization and cookie token support
+- **Content Model**:
+  - \`User\` → \`Course\` → \`Lesson\` → \`Block\`
+  - Each block supports structured content, order, and optional styling
+
+---
+
+## 🐳 Dev Environment
+
+- MariaDB via Docker
+- Prisma ORM + CLI for schema and migrations
+- \`.env.docker\` for Docker runtime configs
+- \`entrypoint.sh\` to apply migrations and start the app
+
+---
+
+## 📄 License
+
+MIT © 2025 — Crafted for modern learning platforms.
+`;
+
 export const SWAGGER = {
   SWAGGER_API: 'Ambylon Craft API',
-  SWAGGER_API_DESCRIPTION: 'The Ambylon Craft API description',
+  SWAGGER_API_DESCRIPTION: description,
   SWAGGER_API_VERSION: '1.0.0',
   SWAGGER_API_PATH: 'docs',
 };
