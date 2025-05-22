@@ -1,13 +1,13 @@
-import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
-import { LoginUserCommand } from '../login-user.command';
-import { DatabaseService } from '@common/database/database.service';
-import { UnauthorizedException } from '@nestjs/common';
 import { AUTH_LITERALS } from '@common/config/constants';
-import { compare } from 'bcrypt';
+import { DatabaseService } from '@common/database/database.service';
 import { TokenService } from '@modules/auth/services/token.service';
+import { UnauthorizedException } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { compare } from 'bcrypt';
+import { LoginUserCommand } from '../login-user.command';
 
-@QueryHandler(LoginUserCommand)
-export class LoginUserCommandHandler implements IQueryHandler<LoginUserCommand> {
+@CommandHandler(LoginUserCommand)
+export class LoginUserCommandHandler implements ICommandHandler<LoginUserCommand> {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly tokenService: TokenService,
