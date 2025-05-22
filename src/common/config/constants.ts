@@ -140,8 +140,8 @@ export const AUTH_LITERALS = {
   INVALIDREFRESHTOKENFROMDB: 'Invalid refresh token from db',
   WRONGCREDENTIALS: 'Wrong credentials provided',
   INVALIDCREDENTIALS: 'Invalid credentials provided',
-  FRONTEND_URL: 'http://localhost:3000',
-  REDIRECT_URL: 'auth_redirect_url',
+  FRONTEND_URL: 'http://localhost:4000',
+  REDIRECT_URL: 'http://127.0.0.1:4000/dashboard',
   JWT_SECRET_NOT_FOUND: 'JWT_SECRET is not defined in the environment configuration.',
   USERNOTCREATED: 'User not created',
 };
